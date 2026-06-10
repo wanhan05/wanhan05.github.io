@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computational Protein Encoding // Wanhan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    body { padding-top: 60px; }
+
+    /* Nav */
+    .writing-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(8,14,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .writing-nav a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav-logo {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--blue-bright);
+      letter-spacing: 0.1em;
+    }
+
+    /* Article */
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+    }
+
+    .article-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue-bright);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .article-eyebrow::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--blue-bright);
+    }
+
+    .article-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .article-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Prose */
+    .prose { font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: var(--text-muted); }
+    .prose p { margin-bottom: 1.25rem; }
+    .prose b, .prose strong { color: var(--text); font-weight: 500; }
+    .prose em { color: var(--text-muted); font-style: italic; }
+    .prose h3 {
+      font-family: var(--sans);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.5rem 0 0.75rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .prose h4 {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--blue-bright);
+      margin: 1.75rem 0 0.5rem;
+    }
+    .prose a {
+      color: var(--blue-bright);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(77,133,255,0.3);
+      transition: border-color 0.2s;
+    }
+    .prose a:hover { border-color: var(--blue-bright); }
+    .prose blockquote {
+      border-left: 2px solid var(--blue-bright);
+      padding-left: 1.25rem;
+      margin: 1.5rem 0;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+    .prose blockquote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+      font-style: normal;
+      color: var(--text-dim);
+    }
+    .prose pre {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin: 1.25rem 0;
+    }
+    .prose ul, .prose ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .prose li { margin-bottom: 0.4rem; }
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.75rem;
+    }
+    .prose th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.65rem;
+    }
+    .prose td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid rgba(30,46,71,0.5);
+      color: var(--text-muted);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .prose td:first-child { color: var(--blue-bright); }
+
+    /* Citation list */
+    .citations {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .citations-title {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .citation {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      text-indent: -1.5rem;
+    }
+    .citation a { color: var(--blue-bright); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav class="writing-nav">
+  <span class="writing-nav-logo">WH // Portfolio</span>
+  <a href="../index.html">← Back</a>
+</nav>
+
+<article class="article">
+
+  <div class="article-eyebrow">Research Note</div>
+  <h1 class="article-title">Computational Protein Encoding — From Sequences to Structure</h1>
+  <div class="article-meta">
+    <span>Wanhan</span>
+    <span>Biotech · ML · Drug Discovery</span>
+    <span>Inspired by a conversation with Lawrence, a friend working between biological research and biotech startups</span>
+  </div>
+
+  <div class="prose">
+
+    <p>Protein functions are almost entirely determined by their <strong>3D shape</strong>, which is in turn determined by their <strong>amino acid sequence</strong>. The central challenge of computational biology for the past 50 years has been: given a sequence of amino acids, what shape does the protein fold into, and can we predict it computationally? And the deeper question that follows: what is the computational cost of accurately processing, computing, and replicating protein structures?</p>
+
+    <h3>The Protein Representation Problem</h3>
+
+    <p>Before any ML model can operate on a protein, the sequence must be encoded into a numerical representation. This is non-trivial; proteins are sequences over a 20-letter alphabet, but the relevant information is multi-scale: local chemistry, global topology, evolutionary history, and physical forces all matter simultaneously.</p>
+
+    <h4>One-Hot Encoding</h4>
+    <p>The simplest representation. Each amino acid gets a 20-dimensional binary vector. A protein of length L becomes an L × 20 matrix. Captures identity but nothing about chemistry, evolutionary relatedness, or spatial context.</p>
+
+    <h4>Physicochemical Features</h4>
+    <p>Manually engineered features per residue: hydrophobicity, charge, molecular weight, side chain volume, hydrogen bond donors/acceptors. Better than one-hot but still local and hand-crafted.</p>
+
+    <h4>Position-Specific Scoring Matrices (PSSMs)</h4>
+    <p>A major step forward. Run a sequence through a database of evolutionarily related sequences (a multiple sequence alignment, or MSA), and for each position compute the frequency with which each amino acid appears across homologs. The result is an L × 20 matrix of evolutionary conservation scores. The key insight: <strong>positions that are conserved across evolution are structurally or functionally important</strong>. PSSMs were the dominant input representation for structure prediction through the 2010s.</p>
+
+    <h4>Learned Embeddings: Protein Language Models</h4>
+    <p>The modern approach, directly inspired by NLP. Train a large transformer on hundreds of millions of protein sequences and learn contextual representations of each residue — embeddings that capture evolutionary context, structural propensity, and biochemical role.</p>
+
+    <p><strong>ESM-2 (Meta AI)</strong> — A BERT-style masked language model trained on 250 million protein sequences. ESM-2 scales to 15 billion parameters and provides state-of-the-art performance across a range of structure prediction tasks, enabling atomic resolution structure prediction.</p>
+
+    <blockquote>
+      Lin, Z., Akin, H., Rao, R., et al. (2023). Evolutionary-scale prediction of atomic-level protein structure with a language model. <em>Science</em>, 379(6637), 1123–1130.
+      <cite><a href="https://doi.org/10.1126/science.ade2574" target="_blank">https://doi.org/10.1126/science.ade2574</a></cite>
+    </blockquote>
+
+    <p><strong>ProtTrans (Rostlab)</strong> — A family of protein language models trained on data from UniRef and BFD containing up to 393 billion amino acids from 2.1 billion protein sequences, using 5,616 GPUs on the Summit supercomputer.</p>
+
+    <p><strong>ProGen (Salesforce Research)</strong> — A GPT-style autoregressive model for protein <em>generation</em>. Trained on 280 million protein sequences from over 19,000 families. Artificial proteins fine-tuned to five distinct lysozyme families showed similar catalytic efficiencies to natural lysozymes, with sequence identity to natural proteins as low as 31.4%.</p>
+
+    <h4>Computational Cost of Encoding at Scale</h4>
+    <p>Protein language models are among the most computationally expensive models in biology. Training ESM-2 at 15 billion parameters required thousands of A100 GPUs running for weeks — infrastructure accessible only to large industrial labs. ProtTrans required 5,616 GPUs on a national supercomputer. This creates a two-tier research environment: foundation models are trained by a handful of well-resourced groups (Meta, DeepMind, Google), while the broader academic community fine-tunes or probes these models with far more limited resources. Even inference is nontrivial — running ESMFold on a single long protein sequence (&gt;1000 residues) requires tens of gigabytes of GPU memory, making large-scale metagenomic screening feasible only in batch on cloud hardware. The democratization narrative around open-source weights is real but partial: the weights are free, but the compute to use them at scale is not.</p>
+
+    <h3>Contact Maps and the Bridge to Structure</h3>
+
+    <p>Before end-to-end structure prediction was feasible, the intermediate task was <strong>contact map prediction</strong>: given a sequence, predict which pairs of residues (i, j) are within 8Å of each other in 3D space. A contact map is an L × L binary matrix and is a compressed representation of 3D structure.</p>
+
+    <p>The key ML advance here was recognizing that <strong>coevolution signals in MSAs encode contacts</strong>. If two positions always mutate together across evolution, they are likely in physical contact. Methods like DCA (Direct Coupling Analysis) and PSICOV extracted these signals statistically. Deep learning then learned to predict contacts from MSA-derived coevolution features directly.</p>
+
+    <h3>AlphaFold</h3>
+
+    <p>AlphaFold 2 (DeepMind, 2021) was published in <em>Nature</em> alongside open-source software and a searchable database. As of November 2025, the paper had been cited nearly 43,000 times. Demis Hassabis and John Jumper shared one half of the 2024 Nobel Prize in Chemistry, awarded "for protein structure prediction," while the other half went to David Baker "for computational protein design."</p>
+
+    <h4>Architecture — the Evoformer Block</h4>
+    <p>The core innovation. Takes two inputs: the MSA and a pairwise representation. These are processed in parallel with cross-attention between them — iterated 48 times — allowing the model to jointly reason about evolutionary constraints and spatial relationships.</p>
+
+    <pre>Input: MSA (s, L, 256) + Pair representation (L, L, 128)
+  ↓ Row attention (within each sequence of the MSA)
+  ↓ Column attention (across sequences at each position)
+  ↓ MSA → Pair update (outer product mean)
+  ↓ Triangle multiplicative update (pair → pair)
+  ↓ Triangle attention
+  × 48 iterations
+Output: Single sequence representation (L, 384)
+        Pair representation (L, L, 128)</pre>
+
+    <h4>Structure Module</h4>
+    <p>Takes the Evoformer output and predicts the 3D coordinates of every atom. Uses a novel <strong>Invariant Point Attention (IPA)</strong> mechanism that operates directly in 3D space — updating a frame (rotation + translation) for each residue using attention that is equivariant to global rotations and translations.</p>
+
+    <h4>Training</h4>
+    <p>Trained on the PDB (170,000 structures) plus a large self-distillation dataset of 350,000 diverse sequences with predicted structures from an earlier AlphaFold iteration. Training used TPU v3 pods — 128 cores — for approximately one week.</p>
+
+    <h3>Post-AlphaFold: Protein Design</h3>
+
+    <p>Structure prediction solves the forward problem. Protein design inverts it: given a desired structure or function, what sequence achieves it? This is the frontier where IP questions become most pointed.</p>
+
+    <h4>ProteinMPNN (2022, Baker Lab)</h4>
+    <p>A graph neural network that takes a protein backbone as input and generates sequences likely to fold into that structure. Dramatically outperforms previous methods and is now the standard for computational protein design pipelines.</p>
+
+    <h4>RFdiffusion (2023, Baker Lab)</h4>
+    <p>By fine-tuning the RoseTTAFold structure prediction network on protein structure denoising tasks, RFdiffusion obtains a generative model of protein backbones achieving outstanding performance on monomer design, protein binder design, symmetric oligomer design, and enzyme active site scaffolding.</p>
+
+    <h3>Current Capabilities and Limitations</h3>
+
+    <h4>What AI Gets Right</h4>
+    <p>For well-studied single-domain proteins with many known homologs, AlphaFold 2 and ESMFold achieve near-crystallographic accuracy: median backbone RMSD in the 1–2Å range, comparable to lower-resolution experimental methods like cryo-EM. Contact prediction, secondary structure assignment, and domain boundary identification are now essentially solved problems.</p>
+
+    <h4>Where Accuracy Degrades</h4>
+    <p><strong>Orphan and low-homology proteins.</strong> Both AlphaFold and ESMFold rely on evolutionary signals. For genuinely novel or synthetic proteins — precisely the ones most interesting for drug design and bioengineering — the models are least reliable.</p>
+    <p><strong>Intrinsically disordered regions (IDRs).</strong> Roughly 30% of the human proteome contains regions with no stable fold. These include some of the most biologically important proteins (transcription factors, signaling hubs, oncoproteins) and they remain essentially uncharacterized computationally.</p>
+    <p><strong>Dynamic conformational states.</strong> A predicted structure is a single snapshot. Proteins switch between conformations to perform their function. Full conformational ensemble prediction at physiological timescales remains beyond current capability.</p>
+
+    <h4>The Computational Ceiling</h4>
+    <p>The current generation of models sits at an interesting inflection point: accuracy for canonical problems is essentially saturated, but the hard problems — dynamics, disorder, function, large complexes — require either fundamentally new architectures or orders-of-magnitude more compute and data. Scaling laws that drove improvements in NLP appear to hit diminishing returns in structure prediction faster than expected, suggesting the remaining gaps are not primarily a data or compute problem but a <strong>representational</strong> one.</p>
+
+    <h3>The ML Architecture Landscape</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Architecture</th>
+          <th>Application in Proteins</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Transformer (BERT-style)</td><td>Protein language models (ESM-2, ProtT5) — sequence encoding</td></tr>
+        <tr><td>Transformer (GPT-style)</td><td>Sequence generation (ProGen, ProtGPT2)</td></tr>
+        <tr><td>Graph Neural Networks</td><td>Structure-based reasoning (ProteinMPNN, GVP)</td></tr>
+        <tr><td>Equivariant Networks (SE(3)/E(3))</td><td>3D structure modeling respecting rotation/translation symmetry</td></tr>
+        <tr><td>Diffusion Models</td><td>Structure generation (RFdiffusion, AlphaFold 3 structure module)</td></tr>
+        <tr><td>Multi-track / Cross-attention</td><td>Joint sequence-structure reasoning (RoseTTAFold, Evoformer)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Open Problems</h3>
+    <ul>
+      <li><strong>Conformational heterogeneity.</strong> Most methods predict a single static structure. Real proteins are dynamic ensembles.</li>
+      <li><strong>Intrinsically disordered proteins.</strong> ~30% of the human proteome is disordered — these proteins function through transient interactions that current models cannot capture.</li>
+      <li><strong>Function prediction.</strong> Structure is not function. Predicting catalytic activity, binding specificity, or allosteric behavior from sequence/structure remains largely open.</li>
+      <li><strong>Membrane proteins.</strong> Underrepresented in training data and with distinct folding environments that current models handle poorly.</li>
+      <li><strong>Compute accessibility.</strong> The gap between what frontier models can do and what academic labs can run independently continues to widen.</li>
+    </ul>
+
+  </div>
+
+  <div class="citations">
+    <div class="citations-title">References</div>
+    <div class="citation">1. Jumper, J., Evans, R., Pritzel, A., et al. (2021). Highly accurate protein structure prediction with AlphaFold. <em>Nature</em>, 596, 583–589. <a href="https://doi.org/10.1038/s41586-021-03819-2" target="_blank">https://doi.org/10.1038/s41586-021-03819-2</a></div>
+    <div class="citation">2. Abramson, J., et al. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. <em>Nature</em>, 630(8016), 493–500. <a href="https://doi.org/10.1038/s41586-024-07487-w" target="_blank">https://doi.org/10.1038/s41586-024-07487-w</a></div>
+    <div class="citation">3. Lin, Z., et al. (2023). Evolutionary-scale prediction of atomic-level protein structure with a language model. <em>Science</em>, 379(6637), 1123–1130. <a href="https://doi.org/10.1126/science.ade2574" target="_blank">https://doi.org/10.1126/science.ade2574</a></div>
+    <div class="citation">4. Baek, M., et al. (2021). Accurate prediction of protein structures and interactions using a three-track neural network. <em>Science</em>, 373(6557), 871–876. <a href="https://doi.org/10.1126/science.abj8754" target="_blank">https://doi.org/10.1126/science.abj8754</a></div>
+    <div class="citation">5. Watson, J.L., et al. (2023). De novo design of protein structure and function with RFdiffusion. <em>Nature</em>, 620(7976), 1089–1100. <a href="https://doi.org/10.1038/s41586-023-06415-8" target="_blank">https://doi.org/10.1038/s41586-023-06415-8</a></div>
+    <div class="citation">6. Dauparas, J., et al. (2022). Robust deep learning–based protein sequence design using ProteinMPNN. <em>Science</em>, 378(6615), 49–56. <a href="https://doi.org/10.1126/science.add2187" target="_blank">https://doi.org/10.1126/science.add2187</a></div>
+    <div class="citation">7. Madani, A., et al. (2023). Large language models generate functional protein sequences across diverse families. <em>Nature Biotechnology</em>, 41, 1099–1106. <a href="https://doi.org/10.1038/s41587-022-01618-2" target="_blank">https://doi.org/10.1038/s41587-022-01618-2</a></div>
+    <div class="citation">8. Elnaggar, A., et al. (2021). ProtTrans: Towards cracking the language of life's code through self-supervised deep learning and high performance computing. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>. <a href="https://doi.org/10.1109/TPAMI.2021.3095381" target="_blank">https://doi.org/10.1109/TPAMI.2021.3095381</a></div>
+  </div>
+
+</article>
+
+</body>
+</html>

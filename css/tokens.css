@@ -1,0 +1,47 @@
+/* css/tokens.css — Cottage Core theme
+   All colours, fonts, and layout tokens live here.
+   Change the palette here to retheme the whole site. */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap');
+
+:root {
+  /* ── Palette ── */
+  --parchment:     #f5efe0;   /* page background */
+  --parchment2:    #ede4ce;   /* card / section bg */
+  --parchment3:    #e4d9b8;   /* deeper surface */
+  --cream:         #faf6ec;   /* lightest surface */
+
+  --moss:          #4a6741;   /* primary accent */
+  --moss-light:    #6b8f5e;   /* hover state */
+  --moss-bright:   #89b07a;   /* highlight */
+  --moss-pale:     #c8dbb8;   /* very light green */
+  --sage:          #8faa7e;   /* muted green */
+  --fern:          #3d5c35;   /* deep green */
+
+  --bark:          #6b4c2a;   /* warm brown */
+  --bark-light:    #9b7045;   /* lighter brown */
+  --tan:           #c4a882;   /* border / tan */
+  --tan-light:     #ddd0b8;   /* lighter border */
+
+  --ink:           #2c2416;   /* primary text */
+  --ink-muted:     #5c4e38;   /* secondary text */
+  --ink-dim:       #8c7a5e;   /* tertiary text */
+
+  /* ── Borders ── */
+  --border:        rgba(107,76,42,0.3);
+  --border-dark:   rgba(107,76,42,0.5);
+  --border-light:  rgba(196,168,130,0.25);
+
+  /* ── Typography ── */
+  --serif:   'Playfair Display', Georgia, serif;
+  --sans:    'Nunito', 'Trebuchet MS', sans-serif;
+  --script:  'Crimson Pro', Georgia, serif;
+
+  /* ── Layout ── */
+  --nav-h:    68px;
+  --gutter:   clamp(1.5rem, 5vw, 4rem);
+  --max-w:    1100px;
+  --radius:   18px;
+  --radius-sm:10px;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}

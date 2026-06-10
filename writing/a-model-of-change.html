@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Bias — Legal Reform Proposal // Wanhan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    body { padding-top: 60px; }
+
+    .writing-nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(8,14,26,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); z-index: 100;
+    }
+    .writing-nav a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);
+      text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s;
+    }
+    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav-logo {
+      font-family: var(--mono); font-size: 0.8rem;
+      color: var(--blue-bright); letter-spacing: 0.1em;
+    }
+
+    .article {
+      max-width: 720px; margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+    }
+
+    .article-eyebrow {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--blue-bright); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .article-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--blue-bright); }
+
+    .article-title {
+      font-family: var(--serif); font-size: clamp(1.8rem, 4.5vw, 3rem);
+      line-height: 1.1; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .article-subtitle {
+      font-family: var(--mono); font-size: 0.82rem;
+      color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;
+    }
+    .article-meta {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
+      margin-bottom: 3rem; padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+    }
+
+    /* Epigraph */
+    .epigraph {
+      border-left: 2px solid rgba(77,133,255,0.4);
+      padding: 0.75rem 1.5rem; margin: 0 0 3rem;
+    }
+    .epigraph p {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.1rem; line-height: 1.65;
+      color: rgba(232,237,245,0.7); margin: 0;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 3rem;
+    }
+    .toc-title {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .toc-list a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);
+      text-decoration: none; transition: color 0.15s;
+      display: flex; align-items: baseline; gap: 0.5rem;
+    }
+    .toc-list a::before { content: '→'; color: var(--blue-bright); font-size: 10px; flex-shrink: 0; }
+    .toc-list a:hover { color: var(--blue-bright); }
+
+    /* Proposal box */
+    .proposal-box {
+      background: rgba(77,133,255,0.06); border: 1px solid rgba(77,133,255,0.25);
+      border-radius: 4px; padding: 1.5rem; margin: 2rem 0;
+    }
+    .proposal-box-label {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--blue-bright); margin-bottom: 0.6rem;
+    }
+    .proposal-box-text {
+      font-family: var(--mono); font-size: 0.78rem;
+      color: var(--text-muted); line-height: 1.8; margin: 0;
+    }
+
+    /* Case study box */
+    .case-box {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-left: 3px solid; border-radius: 0 4px 4px 0;
+      padding: 1.25rem 1.5rem; margin: 1.75rem 0;
+    }
+    .case-box-label {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 500;
+    }
+    .case-box-title {
+      font-family: var(--sans); font-size: 0.95rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.5rem;
+    }
+    .case-box-body {
+      font-family: var(--mono); font-size: 0.73rem;
+      color: var(--text-muted); line-height: 1.75; margin: 0;
+    }
+
+    /* Limitation list */
+    .limitation-list {
+      display: flex; flex-direction: column; gap: 10px; margin: 1.25rem 0;
+    }
+    .limitation-item {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.9rem 1rem;
+    }
+    .limitation-title {
+      font-family: var(--sans); font-size: 0.82rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.35rem;
+    }
+    .limitation-body {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--text-muted); line-height: 1.7; margin: 0;
+    }
+
+    /* Framework summary */
+    .framework-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; margin: 1.5rem 0;
+    }
+    .framework-cell {
+      background: var(--navy2); padding: 1.1rem 1.25rem;
+    }
+    .framework-num {
+      font-family: var(--serif); font-size: 1.8rem; font-style: italic;
+      color: var(--blue-bright); opacity: 0.3; line-height: 1; margin-bottom: 0.35rem;
+    }
+    .framework-title {
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.35rem;
+    }
+    .framework-body {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--text-muted); line-height: 1.65; margin: 0;
+    }
+
+    /* Prose */
+    .prose { font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: var(--text-muted); }
+    .prose p { margin-bottom: 1.25rem; }
+    .prose b, .prose strong { color: var(--text); font-weight: 500; }
+
+    .prose h2 {
+      font-family: var(--serif); font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+      font-weight: 400; font-style: italic; color: var(--text);
+      margin: 3.5rem 0 0.75rem; padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--sans); font-size: 0.92rem; font-weight: 700;
+      color: var(--blue-bright); margin: 2rem 0 0.5rem; letter-spacing: 0.01em;
+    }
+    .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose a {
+      color: var(--blue-bright); text-decoration: none;
+      border-bottom: 1px solid rgba(77,133,255,0.3); transition: border-color 0.2s;
+    }
+    .prose a:hover { border-color: var(--blue-bright); }
+
+    /* Citations */
+    .citations {
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .citations-title {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
+    }
+    .citation {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
+      line-height: 1.7; margin-bottom: 0.75rem;
+      padding-left: 1.5rem; text-indent: -1.5rem;
+    }
+    .citation a { color: var(--blue-bright); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .framework-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="writing-nav">
+  <span class="writing-nav-logo">WH // Portfolio</span>
+  <a href="../index.html">← Back</a>
+</nav>
+
+<article class="article">
+
+  <div class="article-eyebrow">Policy Proposal · IP Law &amp; AI Ethics</div>
+  <h1 class="article-title">A Proposal for Technically-Grounded Legal Reform of AI Bias in High-Stakes Domains</h1>
+  <p class="article-subtitle">How do we make the systematic underinvestment in bias mitigation no longer the rational choice?</p>
+  <div class="article-meta">
+    <span>Wanhan</span>
+    <span>AI Bias · Tort Law · Policy · Healthcare · Credit</span>
+  </div>
+
+  <div class="epigraph">
+    <p>"A model blind to race will still penalize the structural consequences of racism."</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#preface">Preface</a></li>
+      <li><a href="#origin">I. The Origin of the Problem — What Data Inherits</a></li>
+      <li><a href="#limits">II. The Limits of Existing Legal Frameworks</a></li>
+      <li><a href="#proposals">III. The Core Proposals</a></li>
+      <li><a href="#blindness">IV. The Blindness Paradox</a></li>
+      <li><a href="#limitations">V. Additional Limitations and System-Level Risks</a></li>
+      <li><a href="#framework">VI. Toward a Workable Framework</a></li>
+      <li><a href="#idealism">VII. The Idealism of Necessity</a></li>
+      <li><a href="#closing">Closing Reflection</a></li>
+    </ul>
+  </div>
+
+  <div class="prose">
+
+    <h2 id="preface">Preface</h2>
+
+    <p>This proposal is written at the intersection of two incomplete conversations. The first is a technical conversation about how machine learning systems encode, inherit, and amplify bias from the data they are trained on, and how researchers have been working for decades to reduce its impact. The second is a legal conversation about who bears responsibility when those systems cause harm. Neither conversation, pursued in isolation, produces a workable answer. The technical literature documents the problem with precision and proposes mitigations that, without regulatory enforcement, go voluntarily unimplemented. The legal literature identifies frameworks — products liability, disparate impact, negligence — that are structurally ill-equipped for distributed, probabilistic, opaque systems.</p>
+
+    <p>This proposal argues that the path forward requires a framework that is more technically and legally specific than what currently exists. It does not argue that bias can be eliminated. It argues that a coherent structure of incentives, obligations, and accountability can make the systematic underinvestment in bias mitigation no longer the rational choice for institutions deploying AI in consequential domains.</p>
+
+    <p>The two core proposals — mandatory revision cycles and active dataset expansion with feature auditing — are developed here not as idealistic aspirations but as technically achievable mandates with identifiable costs, limitations, and tradeoffs. Those limitations are addressed honestly.</p>
+
+    <h2 id="origin">I. The Origin of the Problem: What Data Inherits</h2>
+
+    <p>Bias in machine learning is a property inherited from the world that generated the training data. The model does not introduce discriminatory patterns. It discovers them, encodes them, and then applies them at a speed and scale that no individual human discriminator ever could.</p>
+
+    <p>The important implication that the legal literature has not fully absorbed is that <strong>the bias is upstream of the model.</strong> Any interventions targeting the model architecture — fairness constraints, output calibration, adversarial debiasing applied at training time — can reduce the expression of bias in model outputs but cannot eliminate bias that is structurally embedded in the data itself. Even eliminating factors that directly result in bias is insufficient: a model blind to race will still penalize the structural consequences of racism.</p>
+
+    <p>The legal implication follows: the entity that curates the training dataset occupies a position of causal primacy in the bias pipeline that existing tort frameworks do not adequately recognize. A hospital that deploys a biased clinical decision support tool is legally and operationally distinct from the company that assembled the training dataset from which the bias originates. Current frameworks struggle to hold both accountable, and the harm from the resulting ambiguity benefits neither.</p>
+
+    <h3>The Representation Gap</h3>
+
+    <p>The structural underrepresentation of certain populations in training datasets is not random. It reflects the same inequalities the bias then perpetuates. Medical AI systems are disproportionately trained on data from large academic medical centers which, by geography and economics, serve patient populations that skew toward higher-income, majority-white demographics. The Optum healthcare algorithm documented by Obermeyer et al. (2019) used healthcare cost as a proxy for health need — a reasonable-seeming choice that embedded a catastrophic assumption that equal cost implied equal illness. Because Black patients with the same illness generated lower costs due to historically unequal healthcare access, the algorithm systematically underestimated their care needs. The bias was not visible in the model's code. It was invisible until a researcher looked for it, and it was corrected not through litigation but through publication.</p>
+
+    <p>This is the pattern: accountability arrives, if it arrives, through research rather than through law. The Gender Shades audit of commercial facial recognition systems (Buolamwini &amp; Gebru, 2018) forced Microsoft, IBM, and Amazon to revise and abandon their facial recognition products because the reputational cost of the published findings exceeded the commercial value of the product line. This is an unstable and inequitable form of accountability — it rewards visibility over harm. The populations most harmed by biased AI systems are frequently those least equipped to fund or publicize the research that would expose that harm.</p>
+
+    <h2 id="limits">II. The Limits of Existing Legal Frameworks</h2>
+
+    <p>Before proposing what the law should do, it is worth being precise about what it currently cannot do.</p>
+
+    <h3>Products liability</h3>
+    <p>If an AI system is treated as a product, a biased output that causes harm could potentially constitute a design defect — the training data composition was chosen in a way that made harm to certain populations foreseeable. The limitation is significant: <strong>courts have historically been reluctant to extend products liability to software,</strong> and AI systems occupy an uncomfortable middle ground between software and service. More practically, the entity deploying the model — a hospital, an insurer, a government agency — is frequently not the entity that trained it or assembled its training data. Distributed causation across a supply chain of this complexity is poorly handled by a legal framework designed for single-manufacturer physical products.</p>
+
+    <h3>Disparate impact</h3>
+    <p>Title VII of the Civil Rights Act, the Fair Housing Act, and the Equal Credit Opportunity Act all prohibit practices with a disparate impact on protected classes regardless of discriminatory intent. This is the most promising existing hook for AI bias claims. An algorithm that denies loans, housing, or employment to minority applicants at higher rates than majority applicants may violate these statutes whether or not any individual intended discrimination. The limitation is evidentiary: <strong>establishing disparate impact requires data about outcomes, and most deployed AI systems are proprietary.</strong> A loan applicant has no legal right to inspect the model that rejected them. You cannot audit what you cannot see.</p>
+
+    <h3>Negligence</h3>
+    <p>A negligence claim requires establishing duty, breach, causation, and harm. AI developers and deployers owe a duty of care to individuals whose lives their systems affect. Breach — the failure to conduct adequate bias auditing — is plausibly establishable given emerging professional norms. Causation is where negligence claims against AI systems become extremely difficult: when a biased algorithm systematically disadvantages thousands of individuals by small margins, <strong>connecting any individual's harm to any specific model output is a near-impossible evidentiary challenge.</strong> And quantifying damages for probabilistic, statistical discrimination — as opposed to a discrete adverse decision — is a question courts have not yet answered.</p>
+
+    <h3>The Verification Burden Problem</h3>
+    <p>There is a structural shift underway in how AI is used in practice that existing frameworks are particularly ill-equipped to handle. In regulated industries, the role of human experts is not being eliminated by AI — it is being transformed. Increasingly, domain experts function as verifiers of AI output rather than independent analysts. If a physician's workflow now consists primarily of reviewing AI-generated recommendations rather than independently synthesizing clinical data, and that physician fails to catch a biased or erroneous output, where does responsibility lie?</p>
+
+    <p>The answer cannot simply be "the physician," for two reasons. First, if the volume and speed of AI outputs render independent verification practically impossible, placing liability on the reviewer is unjust — the burden exceeds what the role can reasonably bear. Second, deference to AI output is not a neutral cognitive state. Research in automation bias consistently shows that human reviewers are significantly less likely to challenge AI outputs than equivalent outputs from human sources, even when the AI output is demonstrably wrong. A framework that assigns liability to human reviewers without accounting for automation bias is placing responsibility at a point in the pipeline where it cannot reliably function.</p>
+
+    <h2 id="proposals">III. The Core Proposals</h2>
+
+    <h3>Proposal One: Mandatory Temporal Revision Cycles</h3>
+
+    <p>The world a model learned from in 2018 is not the world making decisions in 2026. Lending patterns change. Hiring norms evolve. Disease prevalence shifts. A model frozen at training time applies the past's inequalities to the present with increasing inaccuracy, and with no mechanism under current law to require correction.</p>
+
+    <div class="proposal-box">
+      <div class="proposal-box-label">The proposal</div>
+      <p class="proposal-box-text">For AI systems deployed in high-risk domains — healthcare, credit, employment screening, criminal justice, insurance — regulators should mandate retraining intervals calibrated to the domain's rate of change, paired with pre- and post-revision demographic auditing to verify that revision has improved and not degraded demographic performance.</p>
+    </div>
+
+    <p>Regulators must distinguish between two kinds of ground truth that a model encodes. The first is <strong>distributional ground truth</strong>: the statistical patterns of the world as it currently exists. This should update as the world changes. The second is <strong>causal ground truth</strong>: the underlying relationships between inputs and the outcome being predicted. A genuine causal relationship between certain biomarkers and disease risk does not change because society has changed. Temporal revision should target the distributional layer while preserving identified causal relationships validated against clinical or scientific evidence rather than inferred from historical outcomes alone.</p>
+
+    <p>Practically, this requires:</p>
+    <ul>
+      <li>Domain-specific revision intervals set by standing technical advisory bodies with sector expertise, not a blanket regulatory schedule</li>
+      <li>Mandatory data freshness disclosure: deploying institutions certify the vintage and demographic composition of training data at each deployment</li>
+      <li>Version retention obligations: prior model versions preserved for forensic review if harm is alleged after deployment</li>
+      <li>Comparative demographic auditing: each revision cycle requires auditing both old and new model against the same demographic benchmarks, with documented improvement required to maintain deployment authorization</li>
+    </ul>
+
+    <div class="limitation-list">
+      <div class="limitation-item">
+        <div class="limitation-title">Regulatory lag</div>
+        <p class="limitation-body">Technical advisory bodies take time to constitute, develop expertise, and respond to rapidly evolving model architectures. Mandated revision cycles risk lagging behind actual rates of change, providing false assurance of currency.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">Institutional continuity</div>
+        <p class="limitation-body">The company that trained version 1.0 may not exist when revision is due. Revision obligations must be assigned to deploying institutions, not original developers, and must follow the model through acquisitions and licensing arrangements.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">Revision as regression</div>
+        <p class="limitation-body">Retraining is not guaranteed to improve demographic performance. Without mandatory comparative auditing, a revision cycle could introduce new biases while correcting old ones. The requirement must be improvement, not merely currency.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">Cost and market concentration</div>
+        <p class="limitation-body">Mandatory revision cycles impose ongoing compliance costs that larger institutions can absorb and smaller ones may not. Without tiered compliance structures, this regulation could accelerate market concentration precisely in domains — community banking, rural healthcare — where the populations most harmed by AI bias are most likely to be served.</p>
+      </div>
+    </div>
+
+    <h3>Proposal Two: Active Dataset Expansion and Feature Auditing for Proven-Biased Models</h3>
+
+    <p>Where bias has been documented — through regulatory audit, academic research, or litigation — the appropriate response is not only to correct the model but to address the data conditions that produced the bias. This is harder, more expensive, and more necessary than any architectural fix.</p>
+
+    <div class="proposal-box">
+      <div class="proposal-box-label">The proposal</div>
+      <p class="proposal-box-text">For AI systems in high-risk domains that fail mandated demographic parity thresholds at audit, regulators should require deployers to fund active data collection from underrepresented populations, conduct feature audits to identify and address proxy discrimination, and demonstrate measurable improvement before continued deployment is authorized.</p>
+    </div>
+
+    <p><strong>Targeted data collection.</strong> Underrepresentation cannot be corrected by reweighting what already exists. New data must be collected from the populations whose absence is creating the gap — community health centers, rural hospitals, alternative credit data sources.</p>
+
+    <p><strong>Federated learning as a privacy-preserving mechanism.</strong> A significant barrier to data collection from underrepresented populations is the sensitivity of the data and the compliance burden of centralizing it. Federated learning architectures allow a model to train across distributed datasets without the data ever leaving its source institution. For healthcare in particular, where HIPAA compliance creates genuine barriers to data centralization, federated approaches offer a path toward more representative training without requiring institutions to surrender patient data to third parties.</p>
+
+    <p><strong>Feature auditing.</strong> The Optum case is paradigmatic: healthcare cost as a proxy for health need embedded racial disparity into a system that never mentioned race. Mandatory feature auditing should require deployers of high-risk systems to periodically analyze whether any input feature correlates with protected class membership in ways that produce disparate impact on outputs. Where such proxies are identified, deployers should be required to either eliminate the proxy feature, add direct features that reduce reliance on the proxy, or demonstrate that the proxy's predictive value is necessary and that no less discriminatory alternative achieves equivalent accuracy.</p>
+
+    <h2 id="blindness">IV. The Blindness Paradox</h2>
+
+    <p>The most commonly proposed technical fix for AI bias is demographic blindness: remove race, gender, zip code, and other protected or correlated features from the model's input. This intuition is almost entirely wrong, and understanding why is essential to any serious bias mitigation framework.</p>
+
+    <p><strong>Proxy reconstruction.</strong> A model trained without explicit demographic features can reconstruct them from seemingly neutral inputs with considerable accuracy. Zip code predicts race with a precision documented extensively in the fair lending literature. Names predict gender and ethnicity. The combination of undergraduate institution, graduation year, and major contains substantial information about socioeconomic background and race. Removing the explicit feature does not remove the information — it obscures the discrimination pathway, making it harder to detect and audit without reducing its impact.</p>
+
+    <p><strong>The structural consequences of structural inequality.</strong> A model blind to race will still penalize the structural consequences of racism. Employment gaps, interrupted education, lower GPAs from under-resourced institutions, credit files thin from exclusion rather than imprudence — these features appear in the data as neutral signals of individual behavior. The model has no way to distinguish between an employment gap that reflects individual circumstances and one that reflects the cascading effects of housing discrimination, school underfunding, and mass incarceration on a demographic cohort. Blindness does not produce fairness; it produces the appearance of neutrality over a substrate that is profoundly uneven.</p>
+
+    <p>This is not merely an observation. It is a mathematical result. The impossibility theorems of algorithmic fairness — formalized by Chouldechova (2017) and Kleinberg et al. (2016) — demonstrate that several intuitive fairness criteria are mutually incompatible in the presence of base rate differences across groups. Calibration, equal false positive rates, and equal false negative rates cannot all be simultaneously satisfied when the outcome being predicted occurs at different rates across demographic groups. <strong>Every fairness intervention involves a choice about which unfairness to accept. Blindness sidesteps this choice without resolving it.</strong></p>
+
+    <p><strong>The clinical exception.</strong> Demographic blindness can cause affirmative harm in medical contexts where demographic characteristics have genuine biological relevance. Certain genetic conditions occur at different prevalence across ancestral populations. Physiological parameters differ in ways that affect diagnosis and treatment. A model blind to these characteristics may produce less accurate predictions for the very populations the blindness was intended to protect. The appropriate treatment of demographic features must be domain-specific and clinically justified — demographic blindness cannot be the default mandate for medical AI.</p>
+
+    <h2 id="limitations">V. Additional Limitations and System-Level Risks</h2>
+
+    <div class="limitation-list">
+      <div class="limitation-item">
+        <div class="limitation-title">The audit gaming problem</div>
+        <p class="limitation-body">If demographic auditing is mandated at deployment, institutions will optimize for passing the audit rather than achieving genuine fairness. Models can be tuned to perform well on benchmark demographic distributions used for compliance testing while performing poorly on actual deployment populations. Any regulatory mandate must include ongoing, randomized post-deployment testing — not only a pre-deployment gate.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">The third-party auditor problem</div>
+        <p class="limitation-body">Independent auditing requires access to proprietary model internals that developers have strong commercial incentives to protect. A functioning audit regime requires either regulatory compulsion to disclose to authorized auditors under confidentiality protection, or the development of privacy-preserving audit techniques — such as API-based black-box auditing — that can assess demographic performance without requiring full model access.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">Regulatory arbitrage</div>
+        <p class="limitation-body">A domestic mandate applies to domestically-deployed systems. Models trained abroad and deployed via API face different compliance environments. Without point-of-deployment obligations that apply regardless of training origin, a domestic bias regulation creates pressure to offshore the training pipeline while retaining domestic deployment.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">Cost distribution</div>
+        <p class="limitation-body">Increased training, auditing, and revision costs will be passed downstream. Smaller institutions serving lower-margin populations — rural hospitals, community banks, public defenders' offices — face the highest marginal compliance burden relative to their resources. A workable framework must include tiered compliance structures, safe harbor provisions for small deployers, and public funding mechanisms for dataset expansion in domains where market incentives are insufficient.</p>
+      </div>
+      <div class="limitation-item">
+        <div class="limitation-title">The incentive gap as the root problem</div>
+        <p class="limitation-body">Under the current framework, there is no reliable financial incentive for AI developers to invest seriously in bias mitigation before deployment. If the expected cost of a lawsuit or regulatory action is lower than the cost of a rigorous bias audit and model revision, the rational choice is to deploy and correct only if caught. A framework that relies on the visibility of harm to trigger accountability protects visible harms and ignores the rest.</p>
+      </div>
+    </div>
+
+    <h2 id="framework">VI. Toward a Workable Framework</h2>
+
+    <div class="framework-grid">
+      <div class="framework-cell">
+        <div class="framework-num">01</div>
+        <div class="framework-title">Pre-deployment demographic auditing</div>
+        <p class="framework-body">For AI systems in high-risk domains, require demographic performance auditing across protected class categories before commercial deployment, with results disclosed to deploying institutions and available to regulatory review.</p>
+      </div>
+      <div class="framework-cell">
+        <div class="framework-num">02</div>
+        <div class="framework-title">Supply chain liability</div>
+        <p class="framework-body">No single party — training data curators, model developers, packagers, or deployers — should be able to fully externalize responsibility for demographic bias. A joint and several liability structure, apportioned by contribution to the bias, creates incentives at every stage of the pipeline.</p>
+      </div>
+      <div class="framework-cell">
+        <div class="framework-num">03</div>
+        <div class="framework-title">Right to explanation</div>
+        <p class="framework-body">Individuals subject to consequential AI-assisted decisions — credit denial, medical triage, employment screening, criminal sentencing — should have a legally enforceable right to a meaningful explanation, including the factors that drove it.</p>
+      </div>
+      <div class="framework-cell">
+        <div class="framework-num">04</div>
+        <div class="framework-title">Mandatory temporal revision</div>
+        <p class="framework-body">Revision cycles calibrated to domain-specific rates of change, paired with comparative demographic auditing; and active dataset expansion obligations for systems that fail audits, implemented through privacy-preserving mechanisms where data sensitivity requires it.</p>
+      </div>
+    </div>
+
+    <p>None of these elements exist in comprehensive form in United States law today. The EU AI Act moves toward several of them for high-risk systems, establishing transparency and documentation requirements, human oversight mandates, and conformity assessment obligations that represent the most substantial regulatory framework currently in effect. The United States has no equivalent federal mandate, and the patchwork of sector-specific regulations — HIPAA in healthcare, ECOA in credit, Title VII in employment — leaves the majority of high-risk AI deployments in a regulatory gap.</p>
+
+    <h2 id="idealism">VII. The Idealism of Necessity</h2>
+
+    <p>The objection to proposals of this kind is predictable: they are idealistic. Perfect fairness is technically impossible. Bias cannot be fully removed from data that reflects an unequal world. The regulations proposed here would increase costs, create compliance burdens, and may not achieve the outcomes they intend.</p>
+
+    <p>All of this is true. It is not a reason for inaction.</p>
+
+    <p>The mathematical impossibility of simultaneously satisfying all fairness criteria is real, but it does not imply that all choices are equally defensible. It implies that every bias mitigation framework involves explicit choices about which unfairness to accept — choices that are currently being made implicitly, by default, in favor of whoever the training data most richly represents. <strong>Making those choices explicit, subjecting them to regulatory scrutiny and legal accountability, and requiring that they be made with documented justification rather than by neglect — this is achievable, and it is materially different from the status quo.</strong></p>
+
+    <p>The populations currently harmed by biased AI systems — systematically denied care, credit, opportunity, and accurate risk assessment — have no reliable recourse under existing law. The research and publication model of accountability that has produced the cases examined here is not a substitute for legal process. It is a reminder that legal process is needed.</p>
+
+    <p>The model of change proposed here is not a model of perfection. It is a model of accountable imperfection: a framework in which the costs of systematic bias are borne by the institutions that produce it, the incentive structure favors mitigation over concealment, and the individuals most affected have both visibility into the systems that affect them and legal recourse when those systems cause harm.</p>
+
+    <p>That is achievable. It requires only the political will to require it.</p>
+
+    <h2 id="closing">Closing Reflection: On the Intersection of Technology and Law</h2>
+
+    <p>The questions this proposal addresses are not primarily technical questions with legal implications, nor primarily legal questions with technical details. They are questions about what obligations institutions have to the people their systems affect, and how the law can make those obligations enforceable.</p>
+
+    <p>I came to these questions through the experience of building models, handling real datasets, and observing firsthand how choices made at the data collection stage shape everything that follows. What I found was that the most consequential decisions in machine learning are not architectural. They are decisions about whose experience counts as ground truth, whose outcomes are worth predicting accurately, and what accountability looks like when prediction goes wrong.</p>
+
+    <p>These are legal questions. They are questions about rights, duties, and the distribution of responsibility across complex systems. The law is slow and imperfect, but it is the mechanism through which societies assign responsibility for harm at scale. Technology moves faster than law, but that is not an argument for leaving the most powerful predictive systems in human history unaccountable. It is an argument for the urgent work of building frameworks adequate to them.</p>
+
+    <p>That work sits at the intersection where I intend to work: where the technical specificity of machine learning meets the normative structure of law, and where the gap between what AI systems currently do and what they should be held accountable for is not a settled question but an open one.</p>
+
+  </div>
+
+  <div class="citations">
+    <div class="citations-title">References</div>
+    <div class="citation">1. Buolamwini, J. &amp; Gebru, T. (2018). Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification. <em>Proceedings of Machine Learning Research</em>, 81, 1–15.</div>
+    <div class="citation">2. Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science</em>, 366(6464), 447–453.</div>
+    <div class="citation">3. Chouldechova, A. (2017). Fair prediction with disparate impact: A study of bias in recidivism prediction instruments. <em>Big Data</em>, 5(2), 153–163.</div>
+    <div class="citation">4. Kleinberg, J., Mullainathan, S., &amp; Raghavan, M. (2016). Inherent trade-offs in the fair determination of risk scores. <em>Proceedings of Innovations in Theoretical Computer Science</em>.</div>
+    <div class="citation">5. Raji, I.D. &amp; Buolamwini, J. (2019). Actionable Auditing: Investigating the Impact of Publicly Naming Biased Performance Results of Commercial AI Products. <em>AIES '19</em>.</div>
+    <div class="citation">6. Eubanks, V. (2018). <em>Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor.</em> St. Martin's Press.</div>
+    <div class="citation">7. O'Neil, C. (2016). <em>Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy.</em> Crown.</div>
+    <div class="citation">8. European Parliament. (2024). Regulation (EU) 2024/1689 — Artificial Intelligence Act. Official Journal of the European Union.</div>
+    <div class="citation">9. Industry interview: Senior engineer, medical AI platform (Genospace), 2025. Quoted with permission; identifying details generalized.</div>
+  </div>
+
+</article>
+</body>
+</html>

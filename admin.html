@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Admin — Content Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #080e1a; --navy2: #0d1625; --navy3: #111e33;
+      --blue: #2563ff; --blue-bright: #4d85ff;
+      --text: #e8edf5; --text-muted: #7a8ba8; --text-dim: #4a5970;
+      --border: #1e2e47; --green: #1D9E75; --red: #e8341c;
+      --mono: 'IBM Plex Mono', monospace; --sans: 'Manrope', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--navy); color: var(--text);
+      font-family: var(--sans); min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .app { display: grid; grid-template-columns: 340px 1fr; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--navy2); border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sidebar-title {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--blue-bright);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .sidebar-title::before { content: ''; width: 16px; height: 1px; background: var(--blue-bright); }
+
+    /* ── Form elements ── */
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    label {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    input, textarea, select {
+      background: var(--navy3); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text);
+      font-family: var(--mono); font-size: 0.78rem;
+      padding: 0.55rem 0.75rem; outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--blue-bright); }
+    textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    select option { background: var(--navy2); }
+
+    .api-note {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+      line-height: 1.6; padding: 0.6rem 0.75rem;
+      background: rgba(77,133,255,0.06); border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .api-note a { color: var(--blue-bright); text-decoration: none; }
+
+    /* ── Buttons ── */
+    .btn-generate {
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.75rem 1rem;
+      background: var(--blue); color: #fff; border: none;
+      border-radius: 4px; cursor: pointer; transition: opacity 0.15s;
+      width: 100%; font-weight: 500;
+    }
+    .btn-generate:hover { opacity: 0.85; }
+    .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Main panel ── */
+    .main { padding: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    .main-header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .main-title {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+
+    /* ── Status ── */
+    .status {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
+      padding: 0.5rem 0.75rem; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--navy2);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .status.loading { color: var(--blue-bright); border-color: var(--blue); }
+    .status.success { color: var(--green); border-color: var(--green); }
+    .status.error   { color: var(--red); border-color: var(--red); }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor; flex-shrink: 0;
+      animation: none;
+    }
+    .status.loading .status-dot { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Output sections ── */
+    .output-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .output-block {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden;
+    }
+    .output-block.full-width { grid-column: 1 / -1; }
+    .output-block.highlight { border-color: var(--green); }
+
+    .output-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .output-label {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .copy-btn {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.25rem 0.65rem;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-dim); border-radius: 3px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+    .output-body {
+      padding: 1rem; font-family: var(--mono); font-size: 0.73rem;
+      line-height: 1.75; color: var(--text-muted);
+      white-space: pre-wrap; word-break: break-word;
+      min-height: 80px;
+    }
+    .output-body.code {
+      color: #a5d6ff; font-size: 0.7rem; line-height: 1.65;
+      background: var(--navy); border-radius: 0 0 6px 6px;
+    }
+    .output-body em { color: var(--text-dim); font-style: normal; }
+
+    /* ── Connections ── */
+    .connections-list {
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 1rem;
+    }
+    .connection-row {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--navy3); border-radius: 4px;
+      padding: 0.6rem 0.75rem; font-size: 0.72rem;
+    }
+    .conn-source { font-weight: 600; color: var(--text); min-width: 130px; }
+    .conn-arrow { color: var(--text-dim); flex-shrink: 0; font-size: 10px; }
+    .conn-target { color: var(--blue-bright); min-width: 130px; }
+    .conn-label { color: var(--text-dim); font-size: 0.65rem; flex: 1; font-style: italic; }
+
+    /* ── Destination guide ── */
+    .destination-guide {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.25rem;
+    }
+    .dest-title {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+    }
+    .dest-steps { display: flex; flex-direction: column; gap: 6px; }
+    .dest-step {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);
+      display: flex; gap: 10px; align-items: flex-start; line-height: 1.5;
+    }
+    .dest-step-num {
+      background: var(--blue); color: #fff; width: 18px; height: 18px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; font-weight: 600; flex-shrink: 0; margin-top: 1px;
+    }
+    .dest-file {
+      color: var(--blue-bright); font-weight: 500;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 400px; gap: 1rem;
+      color: var(--text-dim);
+    }
+    .empty-icon { font-size: 2.5rem; opacity: 0.3; }
+    .empty-text {
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.08em; text-align: center; line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .output-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Portfolio Admin</div>
+
+    <!-- API Key -->
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      <div class="api-note">
+        Key stays in your browser only — never sent anywhere except Anthropic's API.
+        Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+      </div>
+    </div>
+
+    <!-- Type -->
+    <div class="field">
+      <label>Item type</label>
+      <select id="itemType" onchange="updateTypeFields()">
+        <option value="project">Project</option>
+        <option value="writing">Writing piece</option>
+        <option value="experience">Experience / role</option>
+      </select>
+    </div>
+
+    <!-- Title -->
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="title" placeholder="e.g. ChainSense, AI Bias as IP Liability...">
+    </div>
+
+    <!-- Tags -->
+    <div class="field" id="tagsField">
+      <label>Tags (comma separated)</label>
+      <input type="text" id="tags" placeholder="e.g. ML, Python, Blockchain">
+    </div>
+
+    <!-- Raw notes -->
+    <div class="field">
+      <label>What is this? (bullet points, rough notes, anything)</label>
+      <textarea id="notes" rows="6" placeholder="e.g.
+- ETL pipeline on 3.9M Ethereum transactions
+- K-Means clustering into wallet archetypes
+- Silhouette score 0.72
+- Connected to SFIC project via alpha signal idea"></textarea>
+    </div>
+
+    <!-- Link -->
+    <div class="field">
+      <label>Link (optional)</label>
+      <input type="text" id="link" placeholder="writing/my-writeup.html or https://...">
+    </div>
+
+    <!-- Experience-specific fields -->
+    <div id="expFields" style="display:none; flex-direction:column; gap:1rem">
+      <div class="field">
+        <label>Organisation</label>
+        <input type="text" id="org" placeholder="e.g. Lion Street LLC">
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <input type="text" id="role" placeholder="e.g. Project Manager — Data Systems">
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" id="period" placeholder="e.g. Apr 2025 – Aug 2025">
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generate()">
+      Generate with Claude →
+    </button>
+  </aside>
+
+  <!-- ── MAIN PANEL ──────────────────────────────────── -->
+  <main class="main">
+
+    <div class="main-header">
+      <span class="main-title">Generated output</span>
+      <div id="statusEl" class="status" style="display:none"></div>
+    </div>
+
+    <div id="outputArea">
+      <div class="empty-state">
+        <div class="empty-icon">⬡</div>
+        <div class="empty-text">
+          Fill in the form and hit Generate.<br>
+          Claude will write the descriptions, find connections,<br>
+          and give you the exact code to paste.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── Existing graph context sent to Claude ──────────────
+// Keep this in sync with your actual graph.js GRAPH_NODES
+const EXISTING_NODES = [
+  { id:'chainsense',       label:'ChainSense',           type:'project',    sub:'Blockchain Behavioral Analytics' },
+  { id:'sfic',             label:'SFIC',                 type:'project',    sub:'Options Pricing & Volatility' },
+  { id:'ai-bias-project',  label:'AI Under the Lens',    type:'project',    sub:'Bias, Ethics & Policy' },
+  { id:'computing-project',label:'Computing Infrastructure', type:'project', sub:'Accelerators & Optimization' },
+  { id:'socalguess',       label:'SoCalGuessr',          type:'project',    sub:'Transfer Learning Classifier' },
+  { id:'env-impact',       label:'Environmental Impact', type:'project',    sub:'Cloud Computing Footprint' },
+  { id:'protein-writing',  label:'Protein Encoding',     type:'writing',    sub:'AlphaFold & Sequence Models' },
+  { id:'computing-writing',label:'Computing & Scale',    type:'writing',    sub:'Accelerators & Scale' },
+  { id:'accountability',   label:'Accountability Gap',   type:'writing',    sub:'AI Handoffs & IP Law' },
+  { id:'rag-samd',         label:'RAG & FDA SaMD',       type:'writing',    sub:'Regulatory Framework' },
+  { id:'nav-patent',       label:'Navigation Patents',   type:'writing',    sub:'Alice/Mayo & Robotics IP' },
+  { id:'bias-liability',   label:'Bias as IP Liability', type:'writing',    sub:'Tort & Healthcare AI' },
+  { id:'biotech-startup',  label:'Biotech Startup',      type:'experience', sub:'Bay Area AI · RAG · PMF' },
+  { id:'lionstreet',       label:'Lion Street',          type:'experience', sub:'ML Product · Fintech' },
+  { id:'braincorp',        label:'Brain Corp',           type:'experience', sub:'Robotics · Multi-agent Systems' },
+  { id:'sdcounty',         label:'SD County',            type:'experience', sub:'Policy & Operations Analysis' },
+  { id:'omcp',             label:'UCSD OMCP',            type:'experience', sub:'PM · Triton Consulting Group' },
+  { id:'ibm',              label:'IBM Watson',           type:'experience', sub:'Enterprise AI · Summer 2026' },
+];
+
+// ── Color map (matches graph.js) ───────────────────────
+const COLOR_MAP = {
+  project: {
+    ml: '#60a5fa', quant: '#818cf8', cv: '#38bdf8',
+    systems: '#6366f1', ethics: '#c084fc', default: '#60a5fa',
+  },
+  writing: { research: '#a78bfa', law: '#e879f9', essay: '#c084fc', default: '#a78bfa' },
+  experience: { default: '#f472b6' },
+};
+
+function updateTypeFields() {
+  const type = document.getElementById('itemType').value;
+  document.getElementById('expFields').style.display = type === 'experience' ? 'flex' : 'none';
+  document.getElementById('tagsField').style.display = type === 'experience' ? 'none' : 'flex';
+}
+
+function setStatus(msg, state = '') {
+  const el = document.getElementById('statusEl');
+  el.style.display = 'flex';
+  el.className = 'status ' + state;
+  el.innerHTML = `<div class="status-dot"></div>${msg}`;
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+async function generate() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const type   = document.getElementById('itemType').value;
+  const title  = document.getElementById('title').value.trim();
+  const notes  = document.getElementById('notes').value.trim();
+  const tags   = document.getElementById('tags').value.trim();
+  const link   = document.getElementById('link').value.trim();
+
+  if (!apiKey) { setStatus('Enter your Anthropic API key', 'error'); return; }
+  if (!title)  { setStatus('Enter a title', 'error'); return; }
+  if (!notes)  { setStatus('Add some notes about this item', 'error'); return; }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  setStatus('Calling Claude API…', 'loading');
+
+  // Build prompt
+  const existingContext = EXISTING_NODES.map(n =>
+    `- id:"${n.id}" | label:"${n.label}" | type:${n.type} | about:"${n.sub}"`
+  ).join('\n');
+
+  const extraContext = type === 'experience'
+    ? `Org: ${document.getElementById('org').value}\nRole: ${document.getElementById('role').value}\nPeriod: ${document.getElementById('period').value}\n`
+    : `Tags: ${tags}\n`;
+
+  const prompt = `You are helping maintain a personal portfolio knowledge graph for Wanhan, a Data Science student at UC San Diego pursuing IP and corporate law. The portfolio covers ML/AI, biotech, quantitative finance, blockchain analytics, autonomous robotics, and AI ethics/IP law.
+
+Here are the EXISTING nodes in the knowledge graph:
+${existingContext}
+
+The person wants to add a new ${type} item:
+Title: ${title}
+${extraContext}Notes/description:
+${notes}
+${link ? `Link: ${link}` : ''}
+
+Your job: return a JSON object ONLY (no markdown, no explanation, just raw JSON) with this exact structure:
+
+{
+  "summary": "One punchy sentence (max 180 chars) describing what this is. For the project slider card.",
+  "detail": "2-3 sentences of expanded technical detail. Can use <b>bold</b> for key terms. For the expanded card view.",
+  "sub": "Very short subtitle, 3-6 words, e.g. 'Blockchain Behavioral Analytics'",
+  "suggestedColor": "One of: ml | quant | cv | systems | ethics (for projects) OR research | law | essay (for writing) OR exp (for experience). Pick based on the domain.",
+  "connections": [
+    {
+      "targetId": "exact id from existing nodes list",
+      "label": "3-6 word edge label describing the relationship",
+      "reason": "one sentence explaining why these connect"
+    }
+  ],
+  "nodeId": "snake_case_id for this new node, short and unique",
+  "destinationFile": "js/projects.js OR js/writing.js OR js/experience.js",
+  "graphColor": "pick the most fitting hex color from these options based on domain: #60a5fa (ML/data) #818cf8 (quant/finance) #38bdf8 (CV/vision) #6366f1 (systems/infra) #c084fc (ethics/policy) #a78bfa (research writing) #e879f9 (law writing) #c084fc (general writing) #f472b6 (experience)"
+}
+
+Rules:
+- connections array: include 2-5 connections to EXISTING nodes only. Use the exact id strings.
+- Be specific about why things connect — reference actual content, not just domain similarity.
+- suggestedColor and graphColor should match the domain of this item.
+- nodeId should be lowercase, underscores, no spaces.
+- summary should be engaging and specific, not generic.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const raw  = data.content[0].text.trim().replace(/^```json\n?/, '').replace(/\n?```$/, '');
+    const result = JSON.parse(raw);
+
+    setStatus('Generated successfully', 'success');
+    renderOutput(result, type, title, tags, link);
+
+  } catch (err) {
+    setStatus('Error: ' + err.message, 'error');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderOutput(r, type, title, tags, link) {
+  const tagArray = tags.split(',').map(t => t.trim()).filter(Boolean);
+  const linkVal  = link || 'null';
+
+  // ── Build the JS object to paste ──────────────────────
+  let jsObject = '';
+  let destinationNote = '';
+
+  if (type === 'project') {
+    jsObject = `  {
+    title: '${title}',
+    tags: [${tagArray.map(t => `'${t}'`).join(', ')}],
+    summary: '${r.summary.replace(/'/g, "\\'")}',
+    detail: '${r.detail.replace(/'/g, "\\'")}',
+    link: ${linkVal === 'null' ? 'null' : `'${linkVal}'`},
+  },`;
+    destinationNote = 'js/projects.js → paste inside the PROJECTS array';
+
+  } else if (type === 'writing') {
+    const typeLabel = r.suggestedColor === 'law' ? 'Research Note · Draft'
+      : r.suggestedColor === 'essay' ? 'Essay · Draft' : 'Research Note';
+    jsObject = `  {
+    title: '${title}',
+    type: '${typeLabel}',
+    body: '${r.summary.replace(/'/g, "\\'")}',
+    tags: [${tagArray.map(t => `'${t}'`).join(', ')}],
+    link: ${linkVal === 'null' ? 'null' : `'${linkVal}'`},
+  },`;
+    destinationNote = 'js/writing.js → paste inside the WRITING array';
+
+  } else {
+    const org    = document.getElementById('org').value;
+    const role   = document.getElementById('role').value;
+    const period = document.getElementById('period').value;
+    const [start, end] = period.split(/[-–]/).map(s => s.trim());
+    jsObject = `  {
+    id: '${r.nodeId}',
+    domain: 'ops',
+    period: ['${start || period}', '${end || 'Present'}'],
+    org: '${org}',
+    orgNote: '',
+    role: '${role}',
+    tag: '${tagArray.slice(0,2).join(' · ')}',
+    context: '${r.summary.replace(/'/g, "\\'")}',
+    deliverables: [
+      // TODO: add bullet points from your notes
+    ],
+    skills: [${tagArray.map(t => `'${t.toLowerCase()}'`).join(', ')}],
+    note: '${r.detail.replace(/'/g, "\\'")}',
+  },`;
+    destinationNote = 'js/experience.js → paste inside the EXPERIENCE array';
+  }
+
+  // ── Build graph node object ────────────────────────────
+  const graphNode = `  {
+    id: '${r.nodeId}',
+    label: '${title}',
+    sub: '${r.sub}',
+    type: '${type}',
+    color: '${r.graphColor}',
+    link: ${linkVal === 'null' ? 'null' : `'${linkVal}'`},
+  },`;
+
+  // ── Build graph edges ──────────────────────────────────
+  const newId = r.nodeId;
+  const graphEdges = r.connections.map(c =>
+    `  { source:'${newId}', target:'${c.targetId}', label:'${c.label}' },`
+  ).join('\n');
+
+  // ── Render ─────────────────────────────────────────────
+  document.getElementById('outputArea').innerHTML = `
+
+    <div class="output-grid">
+
+      <!-- Summary -->
+      <div class="output-block">
+        <div class="output-header">
+          <span class="output-label">Generated summary</span>
+        </div>
+        <div class="output-body">${r.summary}</div>
+      </div>
+
+      <!-- Detail -->
+      <div class="output-block">
+        <div class="output-header">
+          <span class="output-label">Expanded detail</span>
+        </div>
+        <div class="output-body">${r.detail}</div>
+      </div>
+
+      <!-- Connections -->
+      <div class="output-block full-width">
+        <div class="output-header">
+          <span class="output-label">Detected connections (${r.connections.length})</span>
+        </div>
+        <div class="connections-list">
+          ${r.connections.map(c => `
+            <div class="connection-row">
+              <span class="conn-source">${title}</span>
+              <span class="conn-arrow">→</span>
+              <span class="conn-target">${EXISTING_NODES.find(n => n.id === c.targetId)?.label || c.targetId}</span>
+              <span class="conn-label">${c.label} — ${c.reason}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Data file code -->
+      <div class="output-block highlight">
+        <div class="output-header">
+          <span class="output-label">Paste into ${r.destinationFile || destinationNote.split(' ')[0]}</span>
+          <button class="copy-btn" onclick="copyText(${JSON.stringify(jsObject)}, this)">Copy</button>
+        </div>
+        <div class="output-body code">${jsObject.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      </div>
+
+      <!-- Graph node code -->
+      <div class="output-block">
+        <div class="output-header">
+          <span class="output-label">Paste into js/graph.js → GRAPH_NODES</span>
+          <button class="copy-btn" onclick="copyText(${JSON.stringify(graphNode)}, this)">Copy</button>
+        </div>
+        <div class="output-body code">${graphNode.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      </div>
+
+      <!-- Graph edges code -->
+      <div class="output-block full-width">
+        <div class="output-header">
+          <span class="output-label">Paste into js/graph.js → GRAPH_EDGES</span>
+          <button class="copy-btn" onclick="copyText(${JSON.stringify(graphEdges)}, this)">Copy</button>
+        </div>
+        <div class="output-body code">${graphEdges.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      </div>
+
+    </div>
+
+    <!-- Where to paste guide -->
+    <div class="destination-guide">
+      <div class="dest-title">Where to paste</div>
+      <div class="dest-steps">
+        <div class="dest-step">
+          <div class="dest-step-num">1</div>
+          <span>Copy the top block → open <span class="dest-file">${destinationNote}</span></span>
+        </div>
+        <div class="dest-step">
+          <div class="dest-step-num">2</div>
+          <span>Copy the graph node block → open <span class="dest-file">js/graph.js</span> → paste inside GRAPH_NODES array</span>
+        </div>
+        <div class="dest-step">
+          <div class="dest-step-num">3</div>
+          <span>Copy the graph edges block → paste inside GRAPH_EDGES array in the same file</span>
+        </div>
+        <div class="dest-step">
+          <div class="dest-step-num">4</div>
+          <span>Run <span class="dest-file">git add . && git commit -m "add ${title}" && git push</span></span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

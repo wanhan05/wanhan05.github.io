@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChainSense Technical Report // Wanhan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    body { padding-top: 60px; }
+
+    .writing-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(8,14,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .writing-nav a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav-logo {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--blue-bright);
+      letter-spacing: 0.1em;
+    }
+
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+    }
+
+    .article-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue-bright);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .article-eyebrow::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--blue-bright);
+    }
+
+    .article-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .article-subtitle {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Key results strip */
+    .results-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .result-cell {
+      background: var(--navy2);
+      padding: 1rem 1.25rem;
+    }
+    .result-num {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-style: italic;
+      color: var(--blue-bright);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .result-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Prose */
+    .prose { font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: var(--text-muted); }
+    .prose p { margin-bottom: 1.25rem; }
+    .prose b, .prose strong { color: var(--text); font-weight: 500; }
+    .prose h3 {
+      font-family: var(--sans);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.5rem 0 0.75rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .prose h4 {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--blue-bright);
+      margin: 1.75rem 0 0.5rem;
+    }
+    .prose a {
+      color: var(--blue-bright);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(77,133,255,0.3);
+      transition: border-color 0.2s;
+    }
+    .prose a:hover { border-color: var(--blue-bright); }
+    .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .prose li { margin-bottom: 0.4rem; }
+    .prose pre {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin: 1.25rem 0;
+    }
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.75rem;
+    }
+    .prose th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.62rem;
+    }
+    .prose td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid rgba(30,46,71,0.5);
+      color: var(--text-muted);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .prose td:first-child { color: var(--blue-bright); font-size: 0.72rem; }
+
+    /* Cluster cards */
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .cluster-card {
+      background: var(--navy2);
+      padding: 1.25rem;
+    }
+    .cluster-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue-bright);
+      margin-bottom: 0.5rem;
+    }
+    .cluster-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cluster-body {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* Stack badge */
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 3rem;
+    }
+    .stack-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--blue-bright);
+      text-decoration: none;
+      border: 1px solid var(--blue-bright);
+      padding: 0.4rem 0.9rem;
+      border-radius: 2px;
+      transition: background 0.2s;
+      margin-top: 1rem;
+    }
+    .repo-link:hover { background: var(--blue-subtle); }
+
+    @media (max-width: 600px) {
+      .results-strip { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="writing-nav">
+  <span class="writing-nav-logo">WH // Portfolio</span>
+  <a href="../index.html">← Back</a>
+</nav>
+
+<article class="article">
+
+  <div class="article-eyebrow">Technical Report · DS3 × TQT</div>
+  <h1 class="article-title">ChainSense: Blockchain Behavioral Analytics</h1>
+  <p class="article-subtitle">Feature Engineering &amp; Machine Learning Analysis</p>
+
+  <div class="article-meta">
+    <span>Wanhan Sun</span>
+    <span>UC San Diego — Data Science</span>
+    <span>February 7, 2026</span>
+  </div>
+
+  <div class="stack-tags">
+    <span class="stack-tag">Web3.py</span>
+    <span class="stack-tag">Alchemy API</span>
+    <span class="stack-tag">Pandas</span>
+    <span class="stack-tag">Parquet</span>
+    <span class="stack-tag">scikit-learn</span>
+    <span class="stack-tag">PCA</span>
+    <span class="stack-tag">K-Means</span>
+    <span class="stack-tag">NumPy</span>
+    <span class="stack-tag">Matplotlib</span>
+  </div>
+
+  <div class="results-strip">
+    <div class="result-cell">
+      <div class="result-num">3.9M</div>
+      <div class="result-label">Ethereum transactions processed</div>
+    </div>
+    <div class="result-cell">
+      <div class="result-num">15</div>
+      <div class="result-label">Behavioral features engineered</div>
+    </div>
+    <div class="result-cell">
+      <div class="result-num">96%</div>
+      <div class="result-label">Variance captured in 3 PCs</div>
+    </div>
+    <div class="result-cell">
+      <div class="result-num">0.560</div>
+      <div class="result-label">K-Means silhouette score (k=3)</div>
+    </div>
+  </div>
+
+  <div class="prose">
+
+    <p>ChainSense treats the Ethereum blockchain as a global, event-driven distributed system. The project transforms raw transaction data into interpretable wallet behavioral features and applies unsupervised machine learning to identify distinct wallet archetypes — with the goal of making on-chain behavior legible as a signal for financial analysis.</p>
+
+    <h3>1. Data Pipeline Architecture</h3>
+
+    <h4>Bronze-Silver-Gold Architecture</h4>
+    <p>We implemented a three-layer data architecture to progressively transform raw blockchain data into model-ready features.</p>
+
+    <table>
+      <thead><tr><th>Layer</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td>Bronze (raw)</td><td>Append-only raw data from Alchemy API: blocks, transactions, receipts, event logs</td></tr>
+        <tr><td>Silver (decoded)</td><td>Semantic decoding of smart contract interactions: ERC-20 transfers, DeFi events, NFT mints</td></tr>
+        <tr><td>Gold (features)</td><td>Wallet-level aggregated features optimized for ML — one row per unique wallet</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Data Collection</h4>
+    <p>We collected <strong>10,000 consecutive Ethereum blocks</strong> (blocks 24,396,337 to 24,406,337), representing approximately 33 hours of blockchain activity — sufficient behavioral density while remaining computationally tractable.</p>
+
+    <ul>
+      <li>Total transactions: <strong>3,888,735</strong></li>
+      <li>Unique wallets analyzed: <strong>2,847,621</strong></li>
+      <li>Average transactions per block: 389</li>
+      <li>Time span: ~33 hours</li>
+    </ul>
+
+    <h3>2. Feature Engineering</h3>
+
+    <p>We engineered 15 features across 4 conceptual categories, each capturing distinct aspects of wallet behavior. Feature selection prioritized interpretability and orthogonality.</p>
+
+    <h4>Activity Metrics</h4>
+    <table>
+      <thead><tr><th>Feature</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>tx_count</td><td>Fundamental activity metric — separates high-volume entities (bots, exchanges) from casual users</td></tr>
+        <tr><td>active_blocks</td><td>Temporal consistency — distinguishes persistent activity from burst events</td></tr>
+        <tr><td>tx_per_block</td><td>Activity intensity — reveals automated systems operating at high throughput</td></tr>
+        <tr><td>burstiness</td><td>σ/μ of transactions per block — low values indicate consistent automation, high values suggest sporadic human activity</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Value Flow Metrics</h4>
+    <table>
+      <thead><tr><th>Feature</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>eth_sent</td><td>Total ETH outflow — spending behavior</td></tr>
+        <tr><td>eth_recv</td><td>Total ETH inflow — accumulation behavior</td></tr>
+        <tr><td>eth_net_flow</td><td>Net position — positive = accumulators, negative = distributors</td></tr>
+        <tr><td>avg_tx_value</td><td>Transaction size preference — distinguishes retail from institutional behavior</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Gas Behavior Metrics</h4>
+    <table>
+      <thead><tr><th>Feature</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>avg_gas</td><td>Transaction complexity — simple transfers use 21k gas, complex contract calls significantly more</td></tr>
+        <tr><td>avg_gas_price_gwei</td><td>Urgency and wealth indicator — higher prices signal time-sensitive or high-value operations</td></tr>
+        <tr><td>total_gas_spent_eth</td><td>Overall activity cost — proxy for wallet economic significance</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Interaction Pattern Metrics</h4>
+    <table>
+      <thead><tr><th>Feature</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>unique_counterparties</td><td>Network diversity — market makers show high values, focused traders show low</td></tr>
+        <tr><td>unique_contracts</td><td>DeFi/protocol engagement breadth</td></tr>
+        <tr><td>contract_interaction_rate</td><td>Proportion of contract calls vs simple transfers</td></tr>
+        <tr><td>counterparty_concentration</td><td>Herfindahl index — measures how focused vs diversified the wallet's connections are</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3. Feature Analysis</h3>
+
+    <h4>Correlation Analysis</h4>
+    <p>Key findings from pairwise Pearson correlation across all 15 features:</p>
+    <ul>
+      <li><strong>Strong positive correlations (r &gt; 0.9):</strong> tx_count ↔ unique_counterparties (0.96), tx_count ↔ tx_per_block (0.92), eth_sent ↔ eth_recv (0.98)</li>
+      <li><strong>Gas behavior cluster:</strong> avg_gas, avg_gas_price_gwei, and total_gas_spent_eth show moderate intercorrelation (0.67–0.89)</li>
+      <li><strong>Orthogonal features:</strong> burstiness shows weak correlation with most features — a valuable independent signal</li>
+      <li><strong>Contract interaction independence:</strong> contract_interaction_rate is relatively uncorrelated with activity metrics, capturing a distinct behavioral dimension</li>
+    </ul>
+
+    <h4>Principal Component Analysis</h4>
+    <p>Applied after log-transforming heavy-tailed features and robust scaling:</p>
+    <ul>
+      <li><strong>PC1 (65.8% variance)</strong> — dominated by tx_per_block (loading: 0.85), representing activity scale</li>
+      <li><strong>PC2 (25.2% variance)</strong> — dominated by eth_net_flow (loading: 0.82), representing accumulation vs distribution</li>
+      <li><strong>PC3 (5.0% variance)</strong> — mix of contract interaction and burstiness features</li>
+      <li><strong>Top 3 PCs capture 96.0% of total variance</strong> — exceptional dimensionality reduction</li>
+    </ul>
+
+    <h3>4. Clustering Analysis</h3>
+
+    <h4>Cluster Number Selection</h4>
+    <p>We evaluated K-means across k=2 to k=8 using silhouette score and inertia:</p>
+
+    <table>
+      <thead><tr><th>k</th><th>Silhouette Score</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td>2</td><td>0.692 (highest)</td><td>Good separation but insufficient interpretability</td></tr>
+        <tr><td>3</td><td>0.560</td><td><strong>Selected</strong> — captures natural separation between token contracts and protocol wallets</td></tr>
+        <tr><td>4</td><td>0.318</td><td>Declined</td></tr>
+        <tr><td>5</td><td>0.345</td><td>Declined</td></tr>
+      </tbody>
+    </table>
+
+    <p>A silhouette score of 0.560 exceeds the &gt;0.5 threshold for good cluster separation. While k=2 achieves the highest score, k=3 was selected for greater interpretability and to capture the distinct behavioral signature of major stablecoin infrastructure.</p>
+
+    <h4>Discovered Archetypes</h4>
+
+    <div class="cluster-grid">
+      <div class="cluster-card">
+        <div class="cluster-label">Cluster 0 · n=13</div>
+        <div class="cluster-name">Standard Protocol Wallets</div>
+        <p class="cluster-body">Active DeFi protocols, DEXs, and lending platforms. Characterized by programmatic, high-frequency interactions with diverse counterparties. High contract interaction rates (&gt;80%), moderate burstiness (0.5–1.5). Examples include Uniswap Router and NFT marketplace contracts.</p>
+      </div>
+      <div class="cluster-card">
+        <div class="cluster-label">Cluster 1 · n=1</div>
+        <div class="cluster-name">USDT Infrastructure</div>
+        <p class="cluster-body">0xdAC17F958D2ee523a2206206994597C13D831ec7. 516,899 transactions, 9,860 active blocks, near-zero ETH value transfers, burstiness 0.68. The behavioral signature of critical stablecoin payment rails — ultra-high frequency, constant activity, zero ETH value.</p>
+      </div>
+      <div class="cluster-card">
+        <div class="cluster-label">Cluster 2 · n=1</div>
+        <div class="cluster-name">USDC Infrastructure</div>
+        <p class="cluster-body">0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48. 269,272 transactions, 9,794 active blocks, burstiness 0.75. Similar but distinct pattern from USDT — subtle differences in transaction intensity result in algorithmic separation, validating feature sensitivity.</p>
+      </div>
+    </div>
+
+    <h3>5. Conclusions &amp; Limitations</h3>
+
+    <p>Carefully engineered behavioral features can reveal interpretable wallet archetypes from raw blockchain transaction data. Our 15-feature representation achieved exceptional dimensionality reduction and good clustering performance, with discovered clusters mapping directly to known Ethereum infrastructure.</p>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>Sample size:</strong> 15 wallets is sufficient for methodology validation but larger samples would enable more nuanced archetype discovery</li>
+      <li><strong>Temporal scope:</strong> 33-hour window captures short-term behavior but may miss longer-term patterns</li>
+      <li><strong>Feature redundancy:</strong> High correlations between eth_sent/eth_recv and tx_count/unique_counterparties suggest further dimensionality reduction opportunities</li>
+      <li><strong>Event decoding:</strong> Silver layer analysis was not fully implemented in this iteration</li>
+    </ul>
+
+    <h4>Future Directions</h4>
+    <ul>
+      <li>Extended temporal analysis across multiple block windows to study behavioral stability</li>
+      <li>TF-IDF encoding on event sequences and graph-based wallet features</li>
+      <li>DBSCAN/HDBSCAN for density-based clustering — more appropriate for irregular cluster shapes</li>
+      <li>GPU-accelerated pipeline using RAPIDS/cuML — DBSCAN 50–500× speedup at scale</li>
+      <li>Trading signal development from behavioral cluster transitions</li>
+    </ul>
+
+    <h3>Technical Appendix</h3>
+
+    <h4>Key Formulas</h4>
+    <pre>Burstiness:
+  burstiness = σ(transactions_per_block) / (μ(transactions_per_block) + ε)
+
+Counterparty Concentration (Herfindahl Index):
+  concentration = Σ(counterparty_share²)
+
+Contract Interaction Rate:
+  rate = count(tx with input_data ≠ 0x) / total_sent_transactions</pre>
+
+    <h4>Processing Pipeline</h4>
+    <pre>Web3.py + Alchemy API  →  Bronze layer (.parquet)
+Pandas aggregations    →  Gold layer feature matrix
+Log transformation (log1p) on heavy-tailed features
+RobustScaler (preferred over StandardScaler for outlier robustness)
+PCA for visualization and dimensionality reduction
+K-Means (k=3, random_state=42, n_init=20)</pre>
+
+    <a href="https://github.com/wanhan05/chain-sense" target="_blank" rel="noopener" class="repo-link">
+      View code on GitHub →
+    </a>
+
+  </div>
+
+</article>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+/* css/nav.css — Cottage nav with vine decorations */
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--gutter);
+  height: var(--nav-h);
+  background: var(--parchment2);
+  border-bottom: 2px solid var(--border-dark);
+  overflow: visible;
+}
+
+/* Hanging vines from nav bottom */
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: -18px; left: 0; right: 0;
+  height: 20px;
+  background:
+    radial-gradient(ellipse 8px 10px at 40px 0, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 80px 2px, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 7px 9px at 130px 0, var(--fern) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 200px 3px, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 8px 10px at 270px 0, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 340px 2px, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 7px 9px at 420px 0, var(--fern) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 500px 3px, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 8px 10px at 580px 0, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 650px 2px, var(--fern) 80%, transparent 81%),
+    radial-gradient(ellipse 7px 9px at 730px 0, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 800px 3px, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 8px 10px at 870px 0, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 950px 2px, var(--fern) 80%, transparent 81%),
+    radial-gradient(ellipse 7px 9px at 1040px 0, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 1120px 3px, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 8px 10px at 1200px 0, var(--fern) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 1280px 2px, var(--moss) 80%, transparent 81%),
+    radial-gradient(ellipse 7px 9px at 1360px 0, var(--moss-bright) 80%, transparent 81%),
+    radial-gradient(ellipse 6px 8px at 1440px 3px, var(--fern) 80%, transparent 81%);
+  pointer-events: none;
+  z-index: 101;
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--fern);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.01em;
+}
+.nav-logo::before {
+  content: '🌱';
+  font-style: normal;
+  font-size: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-muted);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--fern);
+  background: var(--moss-pale);
+  border-color: var(--moss-bright);
+}

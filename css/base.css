@@ -1,0 +1,146 @@
+/* css/base.css — Reset, global layout, shared utilities, animations */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Paper texture overlay ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+/* Moss/vine decorative border top */
+body::after {
+  content: '';
+  position: fixed; top: var(--nav-h); left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--moss) 0px, var(--moss) 12px,
+    var(--moss-bright) 12px, var(--moss-bright) 16px,
+    var(--moss) 16px, var(--moss) 28px,
+    var(--fern) 28px, var(--fern) 32px
+  );
+  opacity: 0.7;
+  pointer-events: none; z-index: 99;
+}
+
+section { position: relative; z-index: 1; }
+
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter);
+}
+
+.section-divider {
+  height: 2px;
+  margin: 0 var(--gutter);
+  position: relative; z-index: 1;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--tan) 0, var(--tan) 6px,
+    transparent 6px, transparent 10px
+  );
+  opacity: 0.5;
+}
+
+/* ── Section header ── */
+.section-header { margin-bottom: 3rem; }
+
+.section-label {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-label::before {
+  content: '🌿';
+  font-size: 0.9rem;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  color: var(--ink);
+  font-weight: 600;
+}
+.section-title em {
+  color: var(--moss);
+  font-style: italic;
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 2px solid var(--border);
+  background: var(--parchment2);
+  padding: 2.5rem var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+.footer-name {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+.footer-note {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  color: var(--ink-dim);
+  text-align: right;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes lineGrow {
+  to { transform: scaleX(1); }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%       { transform: rotate(2deg); }
+}
+
+@media (max-width: 600px) {
+  nav ul { display: none; }
+}

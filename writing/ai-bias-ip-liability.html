@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Bias as IP Liability // Wanhan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    body { padding-top: 60px; }
+
+    .writing-nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(8,14,26,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); z-index: 100;
+    }
+    .writing-nav a {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--text-muted); text-decoration: none;
+      letter-spacing: 0.08em; transition: color 0.2s;
+    }
+    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav-logo {
+      font-family: var(--mono); font-size: 0.8rem;
+      color: var(--blue-bright); letter-spacing: 0.1em;
+    }
+
+    .article {
+      max-width: 720px; margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+    }
+
+    .article-eyebrow {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue-bright); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .article-eyebrow::before {
+      content: ''; width: 24px; height: 1px; background: var(--blue-bright);
+    }
+
+    .article-title {
+      font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .article-subtitle {
+      font-family: var(--mono); font-size: 0.82rem;
+      color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;
+    }
+    .article-meta {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
+      margin-bottom: 3rem; padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+    }
+
+    /* Interview block */
+    .interview-block {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.5rem; margin: 2rem 0;
+    }
+    .interview-label {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--blue-bright); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .interview-label::before {
+      content: ''; width: 14px; height: 1px; background: var(--blue-bright);
+    }
+    .interview-text {
+      font-family: var(--mono); font-size: 0.76rem;
+      color: var(--text-muted); line-height: 1.8; font-style: italic;
+      margin: 0 0 0.6rem;
+    }
+    .interview-attr {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+    }
+
+    /* Case study box */
+    .case-box {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-left: 3px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 1.25rem 1.5rem; margin: 1.75rem 0;
+    }
+    .case-box-label {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 500;
+    }
+    .case-box-title {
+      font-family: var(--sans); font-size: 0.95rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.6rem;
+    }
+    .case-box-body {
+      font-family: var(--mono); font-size: 0.73rem;
+      color: var(--text-muted); line-height: 1.75; margin: 0;
+    }
+
+    /* Prose */
+    .prose {
+      font-family: var(--mono); font-size: 0.82rem;
+      line-height: 1.9; color: var(--text-muted);
+    }
+    .prose p { margin-bottom: 1.25rem; }
+    .prose b, .prose strong { color: var(--text); font-weight: 500; }
+
+    .prose h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 400; font-style: italic;
+      color: var(--text);
+      margin: 3.5rem 0 0.75rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--sans); font-size: 0.95rem; font-weight: 700;
+      color: var(--blue-bright); margin: 2rem 0 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose a {
+      color: var(--blue-bright); text-decoration: none;
+      border-bottom: 1px solid rgba(77,133,255,0.3);
+      transition: border-color 0.2s;
+    }
+    .prose a:hover { border-color: var(--blue-bright); }
+
+    /* Citations */
+    .citations {
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .citations-title {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 1rem;
+    }
+    .citation {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--text-dim); line-height: 1.7;
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem; text-indent: -1.5rem;
+    }
+    .citation a { color: var(--blue-bright); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav class="writing-nav">
+  <span class="writing-nav-logo">WH // Portfolio</span>
+  <a href="../index.html">← Back</a>
+</nav>
+
+<article class="article">
+
+  <div class="article-eyebrow">Essay · IP Law &amp; AI Ethics</div>
+  <h1 class="article-title">AI Bias as IP Liability</h1>
+  <p class="article-subtitle">When training data inherits history's prejudice, who bears legal responsibility — and how do we motivate change?</p>
+  <div class="article-meta">
+    <span>Wanhan</span>
+    <span>AI Bias · Tort Law · IP · Healthcare</span>
+  </div>
+
+  <div class="prose">
+
+    <p>There is an exhibition on facial recognition in the MIT Museum: the White Mask experiment. This experiment documents an exploration of the accuracy of commercial facial analysis systems from large corporations across demographic groups. The results were notable. Error rates for darker-skinned women reached 34.7%, compared to under 1% for lighter-skinned men — a 34-fold disparity on the same task, from the same systems, deployed commercially to enterprise clients worldwide. What followed the publication of that research, led by MIT researcher Joy Buolamwini, was significant not just for its findings but for its impact: Microsoft, IBM, and Amazon each paused or suspended their facial recognition services.</p>
+
+    <p>That moment of accountability is worth studying carefully as an exception — or rather, a precedent. In most cases where AI systems cause harm through biased outputs, no comparable accountability follows. This essay examines two harder questions that sit underneath the presence of accountability: <strong>where does biased data come from, and can it be systematically removed?</strong> And when biased AI causes documented harm at scale, <strong>what legal framework can assign responsibility and motivate change?</strong></p>
+
+    <h2>The Origin of Bias in Training Data</h2>
+
+    <p>AI bias has a specific, traceable origin: the data used to train a model reflects the world that produced it, including the structural inequalities embedded in that world. A model trained to predict which loan applicants will default learns from historical lending decisions made by institutions that, for decades, reflected redlining and discriminatory underwriting. A model trained to flag résumés learns from historical hiring outcomes at companies that systematically hired fewer women. The model does not introduce the bias; it inherits and then systematizes it, applying it at a speed and scale that humans never could.</p>
+
+    <p>The data present reflects greater socioeconomic questions: history has always pushed marginalized groups away from success. Even if training data can be manipulated and balanced, the disparity between demographic groups still exists. What does it take to navigate the delicate balance between representing truth and the constant pursuit to change this reality?</p>
+
+    <p>This matters for the liability question because it shifts where in the pipeline responsibility lies. The bias is not typically introduced at the model architecture level but at the data collection stage, before a single weight is trained. This has a legal implication that is often unnoticed: <strong>the entity that curates the training dataset may bear a different and prior form of responsibility than the entity that deploys the model.</strong></p>
+
+    <p>In the healthcare context, this problem is acute. Medical data is already fragmented, irregular, and difficult to work with. The challenge of building unbiased medical AI is not only a question of intent — it is a question of what data physically exists and is accessible.</p>
+
+    <div class="interview-block">
+      <div class="interview-label">Industry perspective — Genospace, medical AI</div>
+      <p class="interview-text">"Access to data is one of our biggest issues. It's especially tough when we do analysis on rare medical issues. On the compliance side, health data is highly protected and getting access even internally can be a long process. Low quality data and AI hallucinations is another huge blocker we watch out for, and one main change is the shift in my workload from synthesis into verification."</p>
+      <p class="interview-attr">— Senior engineer, medical AI platform, 2025</p>
+    </div>
+
+    <p>The structural consequence of these access constraints is that medical AI systems are overwhelmingly trained on data from large academic medical centers — institutions that, by geography and economics, serve patient populations that skew toward higher-income, majority-white demographics. Rare conditions are systematically underrepresented. Populations that historically avoided or were excluded from the medical system are underrepresented. The model learns from what is available, not from what is holistic.</p>
+
+    <p>Can this be corrected? Technically, yes: through deliberate oversampling of underrepresented groups, synthetic data generation for rare conditions, federated learning that allows training across distributed datasets without centralizing sensitive records, and rigorous demographic auditing before deployment. Practically, the incentive to do so is weak unless there is external pressure — which brings us to the liability question.</p>
+
+    <h2>The White Mask Experiment and the Facial Recognition Precedent</h2>
+
+    <div class="case-box" style="border-color:#8b5cf6">
+      <div class="case-box-label" style="color:#8b5cf6">Documented case — Gender Shades (2018)</div>
+      <div class="case-box-title">MIT Media Lab · Buolamwini &amp; Gebru</div>
+      <p class="case-box-body">Commercial facial analysis tools from three major technology companies were audited across gender and skin tone. Error rates for darker-skinned women reached 34.7%, compared to below 1% for lighter-skinned men. The experiment included a striking demonstration: when a researcher with darker skin held a white mask in front of her face, the system's recognition metric scored higher. Following publication, Microsoft, IBM, and Amazon each suspended or curtailed their facial recognition services, with IBM exiting the market entirely.</p>
+    </div>
+
+    <p>The facial recognition case is the clearest existing example of what AI bias liability could look like — not because it went through a court, but because it did not need to. The reputational and political pressure generated by Buolamwini's research was sufficient to force corporate exits from a product line. This is a fragile form of accountability: it depends on the research being conducted, published, amplified, and taken seriously by the institutions involved. None of these conditions can be assumed.</p>
+
+    <p>What would a more foundational legal framework look like? There are three existing rationales that could apply, each with significant limitations.</p>
+
+    <h3>Products liability — the defect argument</h3>
+
+    <p>Under products liability, a manufacturer can be held responsible for a defective product that causes harm. If an AI system is treated as a product, its biased outputs could potentially constitute a design defect — in that the training data composition was chosen in a way that made harm to certain populations foreseeable. The limitation is significant: <strong>courts have generally been reluctant to treat software as a product</strong> in the products liability sense, and AI systems occupy an uncomfortable middle ground between software and service. The entity deploying the model — a hospital, an insurer, a government agency — is typically not the entity that designed it, or at times even the entity that built the product implementing the model. These interactions create questions about which party in the supply chain bears liability.</p>
+
+    <h3>Disparate impact — the civil rights argument</h3>
+
+    <p>Title VII of the Civil Rights Act, the Fair Housing Act, and the Equal Credit Opportunity Act all prohibit practices that have a disparate impact on protected classes, even absent intentional discriminatory intent. This is potentially powerful for AI bias cases: an algorithm that systematically denies loans, housing, or employment to minority applicants at higher rates than majority applicants may violate these statutes regardless of whether anyone intended discrimination. The limitation is evidentiary: <strong>establishing disparate impact requires data about outcomes, and the opacity of most deployed AI systems makes that data difficult to obtain.</strong> You cannot audit what you cannot see.</p>
+
+    <div class="case-box" style="border-color:#e8341c">
+      <div class="case-box-label" style="color:#e8341c">Documented case — Optum Healthcare Algorithm (2019)</div>
+      <div class="case-box-title">Obermeyer et al., Science</div>
+      <p class="case-box-body">A widely deployed commercial algorithm for identifying high-risk patients used healthcare cost as a proxy for health need. Because Black patients with equal levels of illness generated lower healthcare costs — due to unequal access, not unequal illness — the algorithm systematically underestimated their care needs. Black patients assigned the same risk score as white patients were, on average, significantly sicker. The algorithm was in use at hundreds of hospitals. No litigation followed. The bias was corrected after the research was published.</p>
+    </div>
+
+    <p>A further complication in the healthcare space is that demographic factors cannot be ignored in the context of healthcare due to genetic, biological, and geographical differences — creating tension between correcting for bias and accounting for legitimate clinical variation.</p>
+
+    <h3>Negligence — the duty of care argument</h3>
+
+    <p>A negligence claim requires establishing that the defendant owed a duty of care, breached it, and that the breach caused harm. For AI bias in healthcare, the duty of care is the most promising avenue: healthcare providers have well-established duties to patients, and deploying a diagnostic or risk-scoring system without auditing it for demographic bias could constitute a breach. The challenge is establishing causation: <strong>proving that a biased algorithmic output caused a specific patient harm requires a counterfactual that is difficult to construct</strong> when clinical decisions involve human judgment at every step.</p>
+
+    <h2>The Verification Shift and the New Accountability Gap</h2>
+
+    <p>There is a development in how AI is actually being used in practice that complicates every one of these frameworks. In conversations with practitioners building and deploying AI in regulated industries, a consistent pattern emerges: the role of human experts is not being eliminated by AI, but rather transformed.</p>
+
+    <div class="interview-block">
+      <div class="interview-label">Industry perspective — Genospace, medical AI</div>
+      <p class="interview-text">"The volume of work I was responsible for basically stayed consistent — it has instead turned into verification of AI output rather than synthesis."</p>
+      <p class="interview-attr">— Senior engineer, medical AI platform, 2025</p>
+    </div>
+
+    <p>This is a significant structural shift, and it creates a new liability question that existing frameworks are not equipped to answer. If a human expert's role is now primarily to verify AI output rather than to independently synthesize conclusions, and that expert fails to catch a biased or erroneous output, <strong>where does responsibility lie — with the expert who failed to catch the error, or the system that produced it?</strong></p>
+
+    <p>The same practitioner noted that this verification process requires genuine domain expertise:</p>
+
+    <div class="interview-block">
+      <div class="interview-label">Industry perspective — Genospace, medical AI</div>
+      <p class="interview-text">"Having someone with strong domain knowledge is crucial to catch what the model might miss. These models latch onto bad data points if you're not careful."</p>
+      <p class="interview-attr">— Senior engineer, medical AI platform, 2025</p>
+    </div>
+
+    <p>This suggests that the liability framework needs to account for what might be called the <strong>verification burden</strong> — the expectation, explicit or implicit, that human reviewers will catch AI errors before they cause harm. If that expectation is unreasonable given the volume, speed, or opacity of AI outputs, then placing liability on the human reviewer is itself unjust. And if the reviewer's independence has been effectively compromised by deference to the AI output, the liability analysis becomes more complicated still.</p>
+
+    <h2>Where the Law Currently Falls Short</h2>
+
+    <p>The gap between where AI bias liability needs to be and where existing law places it is significant across four dimensions.</p>
+
+    <p><strong>Opacity.</strong> Most deployed AI systems are proprietary. A patient denied care, a loan applicant rejected, a job seeker filtered out has no legal right to inspect the model that made the decision about them. Without visibility into the model's training data composition, architecture, or demographic performance, establishing bias in a legal proceeding is nearly impossible. The EU AI Act's transparency requirements for high-risk systems represent one approach to this; the United States has no equivalent federal mandate.</p>
+
+    <p><strong>Attribution across the supply chain.</strong> A biased medical AI system typically involves at minimum: a company that assembled the training dataset, a company that trained the model, a company that packaged it as a product, and a healthcare institution that deployed it. Existing tort law is poorly suited to distributed causation across a supply chain of this complexity, particularly when each party can credibly argue that the bias originated upstream.</p>
+
+    <p><strong>Harm aggregation.</strong> Individual harms from biased AI systems are often small, diffuse, and difficult to trace to a specific output. A patient who received slightly lower priority in a triage algorithm may never know. Class action mechanisms exist for aggregating widespread wrongdoing, but AI bias cases present novel challenges: defining the class, establishing common injury, and quantifying damages for statistical discrimination rather than discrete adverse decisions.</p>
+
+    <p><strong>The incentive gap.</strong> Perhaps most fundamentally: under the current framework, there is no reliable financial incentive for AI developers to audit their systems for demographic bias before deployment. If the cost of a lawsuit is lower than the cost of a rigorous bias audit and alteration of the model itself, the rational choice is to deploy and correct only if caught. The facial recognition case shows that reputational pressure can substitute for legal pressure, but only when the research is conducted and amplified. Most biased AI systems will never receive that attention.</p>
+
+    <h2>Toward a Framework</h2>
+
+    <p>The two questions this essay began with are connected: where does biased data come from, and how do we assign responsibility when it causes harm? The answer to the second question is what determines whether there is any incentive to address the first.</p>
+
+    <p>A workable framework would need at minimum: <strong>mandatory pre-deployment demographic auditing</strong> for high-risk AI applications, with results disclosed to deploying institutions; <strong>supply chain liability</strong> that does not allow any single party to fully externalize responsibility for training data composition; and <strong>a right to explanation</strong> for individuals subject to consequential AI decisions, creating the evidentiary foundation for disparate impact claims.</p>
+
+    <p>None of these exist in comprehensive form in United States law today. The EU AI Act moves toward several of them for high-risk systems. What the facial recognition case, the Optum case, and the dermatology dataset research demonstrate repeatedly is that when accountability does arrive, it arrives through research and publication rather than through legal process. This is a fragile substitute for law.</p>
+
+    <p>The practitioner interviewed for this piece noted that the biggest barrier to AI adoption in regulated industries is not technical — it is proving the business case to leadership and working through compliance and legal uncertainty. Until there is a clear legal framework for AI bias liability, the organizations deploying these systems face unpredictable exposure. And the populations harmed by biased systems face no reliable recourse at all.</p>
+
+  </div>
+
+  <div class="citations">
+    <div class="citations-title">References &amp; Sources</div>
+    <div class="citation">1. Buolamwini, J. &amp; Gebru, T. (2018). Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification. <em>Proceedings of Machine Learning Research</em>, 81, 1–15. <a href="http://proceedings.mlr.press/v81/buolamwini18a.html" target="_blank">proceedings.mlr.press</a></div>
+    <div class="citation">2. Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science</em>, 366(6464), 447–453. <a href="https://doi.org/10.1126/science.aax2342" target="_blank">doi.org/10.1126/science.aax2342</a></div>
+    <div class="citation">3. Raji, I.D. &amp; Buolamwini, J. (2019). Actionable Auditing: Investigating the Impact of Publicly Naming Biased Performance Results of Commercial AI Products. <em>AIES '19: Proceedings of the 2019 AAAI/ACM Conference on AI, Ethics, and Society</em>.</div>
+    <div class="citation">4. Eubanks, V. (2018). <em>Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor.</em> St. Martin's Press.</div>
+    <div class="citation">5. O'Neil, C. (2016). <em>Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy.</em> Crown.</div>
+    <div class="citation">6. European Parliament. (2024). Regulation (EU) 2024/1689 — Artificial Intelligence Act. Official Journal of the European Union. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689" target="_blank">eur-lex.europa.eu</a></div>
+    <div class="citation">7. Industry interview: Senior engineer, medical AI platform (Genospace). Conducted as part of primary market research on AI adoption in regulated healthcare contexts, 2025. Quoted with permission; identifying details generalized.</div>
+  </div>
+
+</article>
+</body>
+</html>

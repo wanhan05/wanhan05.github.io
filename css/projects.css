@@ -1,0 +1,70 @@
+/* css/projects.css */
+
+#projects { background: var(--parchment2); }
+
+.slider-viewport { overflow: hidden; cursor: grab; user-select: none; }
+.slider-viewport:active { cursor: grabbing; }
+.slider-track { display: flex; gap: 20px; transition: transform 0.4s var(--ease-out); will-change: transform; }
+
+.proj-card {
+  flex: 0 0 340px; background: var(--cream);
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 1.75rem; position: relative; overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: flex; flex-direction: column; gap: 0.65rem;
+  min-height: 260px; box-shadow: 3px 3px 0 var(--tan-light);
+}
+.proj-card:hover {
+  border-color: var(--moss);
+  box-shadow: 4px 4px 0 var(--moss-pale);
+}
+.proj-top-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--moss), var(--moss-bright), var(--sage));
+  opacity: 0; transition: opacity 0.25s;
+}
+.proj-card:hover .proj-top-accent { opacity: 1; }
+.proj-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.proj-tag-pill {
+  font-family: var(--sans); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--fern); background: var(--moss-pale);
+  border: 1px solid var(--moss-bright); padding: 2px 7px; border-radius: 20px;
+}
+.proj-body { font-family: var(--script); font-size: 0.88rem; line-height: 1.8; color: var(--ink-muted); flex: 1; }
+.proj-expand-btn {
+  font-family: var(--sans); font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--moss); background: none; border: none;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  padding: 0; margin-top: auto; transition: color 0.15s;
+}
+.proj-expand-btn:hover { color: var(--fern); }
+.proj-expand-btn i { transition: transform 0.2s; font-size: 12px; }
+.proj-card.open .proj-expand-btn i { transform: rotate(180deg); }
+.proj-detail { display: none; border-top: 1px dashed var(--border); padding-top: 0.85rem; margin-top: 0.25rem; animation: slideDown 0.2s ease; }
+.proj-card.open .proj-detail { display: block; }
+.proj-detail-body { font-family: var(--script); font-size: 0.82rem; line-height: 1.8; color: var(--ink-muted); }
+.proj-detail-body b { color: var(--ink); font-weight: 700; }
+
+.slider-controls { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+.slider-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid var(--border-dark); background: var(--cream);
+  color: var(--ink-muted); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; box-shadow: 2px 2px 0 var(--tan-light);
+}
+.slider-btn:hover:not(:disabled) { border-color: var(--moss); color: var(--moss); background: var(--moss-pale); }
+.slider-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.slider-dots { display: flex; gap: 6px; align-items: center; }
+.slider-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--tan);
+  cursor: pointer; transition: all 0.2s; border: none; padding: 0;
+}
+.slider-dot.active { background: var(--moss); transform: scale(1.4); }
+.slider-count { font-family: var(--sans); font-size: 10px; font-weight: 600; color: var(--ink-dim); margin-left: auto; letter-spacing: 0.06em; }
+.slider-hint { font-family: var(--sans); font-size: 10px; color: var(--ink-dim); opacity: 0.5; letter-spacing: 0.08em; text-transform: uppercase; }
+
+@media (max-width: 768px) { .proj-card { flex: 0 0 88vw; } }

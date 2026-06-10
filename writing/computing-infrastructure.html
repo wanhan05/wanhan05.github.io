@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computing Infrastructure // Wanhan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    body { padding-top: 60px; }
+
+    .writing-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: rgba(8,14,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .writing-nav a {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--text-muted); text-decoration: none;
+      letter-spacing: 0.08em; transition: color 0.2s;
+    }
+    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav-logo {
+      font-family: var(--mono); font-size: 0.8rem;
+      color: var(--blue-bright); letter-spacing: 0.1em;
+    }
+
+    .article {
+      max-width: 740px; margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+    }
+
+    .article-eyebrow {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue-bright); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .article-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--blue-bright); }
+
+    .article-title {
+      font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .article-subtitle {
+      font-family: var(--mono); font-size: 0.82rem;
+      color: var(--text-muted); margin-bottom: 1.5rem;
+    }
+    .article-meta {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
+      margin-bottom: 3rem; padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+    }
+
+    /* Key stats */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; margin-bottom: 3rem;
+    }
+    .stat-cell { background: var(--navy2); padding: 1rem 1.25rem; }
+    .stat-num {
+      font-family: var(--serif); font-size: 1.8rem; font-style: italic;
+      color: var(--blue-bright); line-height: 1; margin-bottom: 0.25rem;
+    }
+    .stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); line-height: 1.5; }
+
+    /* TOC */
+    .toc {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 3rem;
+    }
+    .toc-title {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-list a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);
+      text-decoration: none; transition: color 0.15s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .toc-list a::before { content: '→'; color: var(--blue-bright); font-size: 10px; }
+    .toc-list a:hover { color: var(--blue-bright); }
+
+    /* Image placeholder */
+    .chart-placeholder {
+      background: var(--navy2); border: 1px dashed var(--border);
+      border-radius: 4px; padding: 2rem; margin: 1.5rem 0;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 0.5rem; min-height: 140px;
+    }
+    .chart-placeholder-label {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--text-dim); letter-spacing: 0.08em;
+    }
+    .chart-placeholder-hint {
+      font-family: var(--mono); font-size: 0.6rem;
+      color: var(--text-dim); opacity: 0.5;
+    }
+    /* When actual image is present, show it */
+    .chart-img {
+      width: 100%; border-radius: 4px;
+      border: 1px solid var(--border); margin: 1.5rem 0;
+      display: block;
+    }
+
+    /* Chip comparison cards */
+    .chip-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; margin: 1.5rem 0;
+    }
+    .chip-card { background: var(--navy2); padding: 1.25rem; }
+    .chip-name {
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 700;
+      color: var(--blue-bright); margin-bottom: 0.35rem;
+    }
+    .chip-maker {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--text-dim); margin-bottom: 0.6rem;
+    }
+    .chip-body {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--text-muted); line-height: 1.6;
+    }
+
+    /* Prose */
+    .prose { font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: var(--text-muted); }
+    .prose p { margin-bottom: 1.25rem; }
+    .prose b, .prose strong { color: var(--text); font-weight: 500; }
+    .prose h2 {
+      font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 400; color: var(--text); margin: 3.5rem 0 0.75rem;
+      padding-top: 3rem; border-top: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--sans); font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin: 2.25rem 0 0.6rem;
+    }
+    .prose h4 {
+      font-family: var(--sans); font-size: 0.9rem; font-weight: 600;
+      color: var(--blue-bright); margin: 1.5rem 0 0.4rem;
+    }
+    .prose a {
+      color: var(--blue-bright); text-decoration: none;
+      border-bottom: 1px solid rgba(77,133,255,0.3); transition: border-color 0.2s;
+    }
+    .prose a:hover { border-color: var(--blue-bright); }
+    .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .prose li { margin-bottom: 0.4rem; }
+    .prose pre {
+      background: var(--navy3); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.25rem; overflow-x: auto;
+      font-size: 0.72rem; line-height: 1.7; color: var(--text-muted);
+      margin: 1.25rem 0;
+    }
+    .prose table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.74rem;
+    }
+    .prose th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim); font-weight: 400;
+      text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.62rem;
+    }
+    .prose td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid rgba(30,46,71,0.5);
+      color: var(--text-muted); vertical-align: top; line-height: 1.5;
+    }
+    .prose td:first-child { color: var(--blue-bright); font-weight: 500; }
+
+    /* Callout */
+    .callout {
+      border-left: 2px solid var(--blue-bright);
+      padding: 0.75rem 1.25rem; margin: 1.5rem 0;
+      background: var(--blue-subtle); border-radius: 0 4px 4px 0;
+    }
+    .callout p { margin: 0; font-size: 0.78rem; }
+
+    @media (max-width: 600px) {
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .chip-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="writing-nav">
+  <span class="writing-nav-logo">WH // Portfolio</span>
+  <a href="../index.html">← Back</a>
+</nav>
+
+<article class="article">
+
+  <div class="article-eyebrow">Research Note · Systems &amp; Infrastructure</div>
+  <h1 class="article-title">Computing Infrastructure — Accelerators, Optimization, and the Cost of Scale</h1>
+  <p class="article-subtitle">Why the same neural network runs in seconds on one machine and hours on another</p>
+  <div class="article-meta">
+    <span>Wanhan</span>
+    <span>UC San Diego — Data Science</span>
+    <span>GPU · TPU · LPU · Memory Wall · Flash Attention</span>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-cell">
+      <div class="stat-num">3.35 TB/s</div>
+      <div class="stat-label">H100 HBM3 memory bandwidth</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">314 ZF</div>
+      <div class="stat-label">GPT-3 training compute (zettaFLOPs)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">tokens/sec on Groq LPU (LLaMA-70B)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">60×</div>
+      <div class="stat-label">HBM vs consumer DDR5 bandwidth gap</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#accelerators">Part 1 — Hardware Accelerators: GPU, TPU, LPU</a></li>
+      <li><a href="#optimizations">Part 2 — Optimizations in Computation</a></li>
+      <li><a href="#cost">Part 3 — The Real Cost of Compute at Scale</a></li>
+      <li><a href="#comparison">Head-to-Head Comparison</a></li>
+    </ul>
+  </div>
+
+  <div class="prose">
+
+    <p>Modern AI is computationally bottlenecked not by raw CPU speed but by the ability to perform massive numbers of simple arithmetic operations in parallel — and then by the ability to move data to those operations fast enough to keep them busy. This writeup covers three interconnected topics: the hardware architectures designed to solve this problem, the software optimizations that extract maximum efficiency from that hardware, and the real-world cost — financial, energetic, and physical — of running these systems at scale.</p>
+
+    <!-- ── PART 1: ACCELERATORS ───────────────────────── -->
+    <h2 id="accelerators">Part 1 — Hardware Accelerators</h2>
+
+    <h3>GPUs: Graphics Processing Units</h3>
+
+    <p>Originally designed for rendering graphics, GPUs turned out to be extraordinarily well-suited for deep learning because graphics and neural networks share the same core computational primitive: multiplying large matrices in parallel.</p>
+
+    <h4>Architecture</h4>
+    <p>A CPU has a small number of powerful cores (typically 8–64) optimized for sequential, low-latency computation with complex control flow. A GPU has thousands of much simpler cores — NVIDIA's H100 has 16,896 CUDA cores — designed to execute the same instruction on thousands of data points simultaneously. This is called <strong>SIMD (Single Instruction, Multiple Data)</strong> parallelism.</p>
+
+    <p>The key components relevant to ML:</p>
+    <ul>
+      <li><strong>CUDA cores / Shader processors</strong> — basic parallel compute units handling floating-point arithmetic</li>
+      <li><strong>Tensor Cores</strong> — specialized matrix multiply-accumulate units introduced in NVIDIA's Volta architecture (2017). An H100 can perform 4 petaFLOPS of FP8 tensor operations</li>
+      <li><strong>HBM (High Bandwidth Memory)</strong> — stacked DRAM sitting directly on the GPU die. The H100 has 80GB HBM3 with ~3.35 TB/s bandwidth</li>
+      <li><strong>NVLink / NVSwitch</strong> — high-speed interconnects allowing multiple GPUs to share memory without going through the CPU</li>
+    </ul>
+
+    <h4>Why GPUs dominate ML</h4>
+    <p>GPUs won the deep learning era largely by accident and ecosystem. NVIDIA's CUDA programming model (released 2007) gave researchers a relatively accessible way to write GPU kernels, and the ecosystem — cuDNN, cuBLAS, PyTorch, TensorFlow — built up around it over a decade. By the time specialized AI chips arrived, the CUDA moat was enormous. GPT-4, Gemini, LLaMA, and AlphaFold were all trained on NVIDIA GPU clusters.</p>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>Memory wall</strong> — GPT-4 (~1.8T parameters) cannot fit on a single GPU. Multi-GPU training requires tensor, pipeline, and data parallelism with significant engineering overhead</li>
+      <li><strong>Power consumption</strong> — an H100 draws up to 700W. A cluster of 10,000 H100s draws ~7 megawatts, comparable to a small power plant</li>
+      <li><strong>Cost</strong> — H100s sell for $25,000–$40,000 each. Large training runs cost tens to hundreds of millions of dollars</li>
+    </ul>
+
+    <!-- Chart: Peak AI compute throughput -->
+    <div class="chart-placeholder">
+      <div class="chart-placeholder-label">Peak AI Compute Throughput — Accelerators</div>
+      <div class="chart-placeholder-hint">Add Images/Peak AI compute throughput- Accelerators.png to assets/ folder</div>
+    </div>
+
+    <h3>TPUs: Tensor Processing Units</h3>
+
+    <p>TPUs are Google's custom accelerators, built from the ground up for neural network workloads. The first TPU was deployed internally at Google in 2015.</p>
+
+    <h4>Architecture — Systolic Arrays</h4>
+    <p>TPUs are <strong>systolic array</strong> processors. A systolic array is a grid of processing elements where data flows rhythmically from cell to cell, with each cell performing a multiply-accumulate operation as data passes through. This is architecturally ideal for matrix multiplication: the matrix flows through the array and the result accumulates without ever writing intermediate values back to memory.</p>
+
+    <p>The TPU v4 chip features a 128×128 systolic array, HBM on-package, and custom interconnects allowing TPU <strong>pods</strong> — racks of thousands of chips connected in a 3D torus topology — to behave as a single massively parallel computer. Google's TPU v4 pods contain 4,096 chips connected this way. The torus topology means data can flow efficiently between any two chips without routing through a central switch.</p>
+
+    <h4>Strengths and limitations</h4>
+    <p>Because Google controls both the hardware and the primary framework (JAX/XLA), they optimize the full stack from silicon to model code — XLA compiles entire computation graphs to TPU instructions, eliminating Python overhead. TPUs are power-efficient and excel at dense matrix multiplication. Limitations: ecosystem lock-in (JAX/XLA native, PyTorch secondary), less flexibility for irregular computation patterns, and harder debugging under the XLA compilation model.</p>
+
+    <!-- Chart: Memory bandwidth -->
+    <div class="chart-placeholder">
+      <div class="chart-placeholder-label">Memory Bandwidth — Accelerators</div>
+      <div class="chart-placeholder-hint">Add Images/Memory Bandwidth- Accelerators.png to assets/ folder</div>
+    </div>
+
+    <h3>LPUs: Language Processing Units</h3>
+
+    <p>LPUs are the newest entrant, coined and commercialized by <strong>Groq</strong>. The term is somewhat marketing-driven, but the underlying architecture is genuinely novel and distinct from both GPUs and TPUs.</p>
+
+    <h4>Architecture — Deterministic Streaming</h4>
+    <p>Groq's LPU is a <strong>deterministic, compiler-driven</strong> processor built around the Tensor Streaming Processor (TSP). The key insight: the largest bottleneck in transformer inference is not compute but <strong>memory bandwidth and latency</strong> — specifically, the cost of loading billions of model weights from DRAM on every forward pass.</p>
+
+    <p>Groq's solution: <strong>on-chip SRAM only</strong> (900MB per chip, no HBM or external DRAM), giving bandwidths in the range of tens of TB/s versus ~3 TB/s for HBM3. Every operation is statically scheduled at compile time — no runtime scheduler, no caches, no branch predictors. The chip is simpler and more efficient per area. For large models that don't fit on one chip, weights stream chip-to-chip in a pipelined fashion.</p>
+
+    <h4>Performance and limitations</h4>
+    <p>Groq achieves 500+ tokens per second on LLaMA-70B, compared to ~50–100 tokens/second on a single H100 — a genuine result for autoregressive token generation. Latency is highly predictable. Limitations: LPUs are not suited for training (backpropagation exceeds on-chip SRAM), model size requires many chips at scale (LLaMA-70B needs 150+ chips at 900MB per chip), and the ecosystem is nascent compared to CUDA.</p>
+
+    <!-- Chart: LLM Inference Speed -->
+    <div class="chart-placeholder">
+      <div class="chart-placeholder-label">LLM Inference Speed — Accelerators</div>
+      <div class="chart-placeholder-hint">Add Images/LLM Inference Speed- Accelerators.png to assets/ folder</div>
+    </div>
+
+    <h3>The Broader Landscape</h3>
+
+    <div class="chip-grid">
+      <div class="chip-card">
+        <div class="chip-name">Cerebras WSE</div>
+        <div class="chip-maker">Cerebras Systems</div>
+        <p class="chip-body">A single chip the size of an entire silicon wafer — 900,000 cores, 40GB on-chip SRAM. Designed for training large models without inter-chip communication bottleneck. The most extreme "put everything on chip" expression.</p>
+      </div>
+      <div class="chip-card">
+        <div class="chip-name">Graphcore IPU</div>
+        <div class="chip-maker">Graphcore</div>
+        <p class="chip-body">Massively parallel processor designed around the idea that neural network computation is more like graph traversal than matrix multiply. Different memory model from GPUs. Traction in research settings.</p>
+      </div>
+      <div class="chip-card">
+        <div class="chip-name">SambaNova</div>
+        <div class="chip-maker">SambaNova Systems</div>
+        <p class="chip-body">Reconfigurable dataflow architecture that compiles neural network graphs into spatially mapped dataflow programs — similar in philosophy to Groq but more flexible for irregular workloads.</p>
+      </div>
+      <div class="chip-card">
+        <div class="chip-name">AWS Trainium / Inferentia</div>
+        <div class="chip-maker">Amazon Web Services</div>
+        <p class="chip-body">Amazon's in-house training and inference chips, designed to reduce cloud customer dependence on NVIDIA and lower cost per token for inference at scale.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>The common thread: every architecture is attacking the same bottleneck from different angles. The cost of moving data between memory and compute is now the primary constraint in large-scale AI — whether by putting more memory on-chip (Cerebras, Groq), building faster interconnects (TPU pods), or making compute units smarter about reusing data (Tensor Cores, systolic arrays).</p>
+    </div>
+
+    <!-- Chart: Power draw -->
+    <div class="chart-placeholder">
+      <div class="chart-placeholder-label">Power Draw — Accelerators</div>
+      <div class="chart-placeholder-hint">Add Images/Power draw- Accelerators.png to assets/ folder</div>
+    </div>
+
+    <!-- ── PART 2: OPTIMIZATIONS ──────────────────────── -->
+    <h2 id="optimizations">Part 2 — Optimizations in Computation</h2>
+
+    <h3>The Memory Wall and Why It Defines Everything</h3>
+
+    <p>The processor is almost never the bottleneck. The bottleneck is almost always getting data to the processor fast enough to keep it busy. A modern GPU core can perform thousands of floating-point operations per clock cycle — but if the values it needs are sitting in DRAM rather than on-chip SRAM, it will stall, waiting for data across a memory bus that is orders of magnitude slower than the compute units themselves.</p>
+
+    <p>The memory hierarchy is brutally tiered: registers under a nanosecond, L1 cache a few nanoseconds, DRAM roughly a hundred nanoseconds. For a GPU doing matrix arithmetic, that gap is the difference between peak utilization and idle silicon. Large language models — with parameter counts in the tens to hundreds of billions — absolutely cannot fit their weights in cache. Every forward pass requires pulling weights from DRAM or, in distributed settings, from across a network. The cost of that data movement frequently exceeds the cost of the computation itself.</p>
+
+    <h3>Hardware Optimizations</h3>
+
+    <h4>Reduced precision arithmetic</h4>
+    <p>The most impactful hardware optimization has been the shift toward lower-precision arithmetic. Operating in float16 rather than float32 cuts memory bandwidth requirements roughly in half — twice as many weights transferred per second. NVIDIA reports 2–3× speedup in mixed-precision training, where float16 handles the bulk of computation while float32 is reserved for gradient accumulation. At inference time, quantizing weights to INT8 or INT4 can reduce model size by 4–8×, enabling models that would otherwise require multiple GPUs to fit on a single device.</p>
+
+    <p>A Tensor Core on an H100 is not a general-purpose floating-point unit — it is a matrix-multiply-accumulate unit performing A × B + C on small matrix tiles in a single clock cycle, without the sequential bottleneck of a Von Neumann pipeline.</p>
+
+    <h4>High-Bandwidth Memory (HBM)</h4>
+    <p>Because bandwidth is the bottleneck, chip designers invested in HBM — a stacked memory architecture where DRAM dies are placed directly on the GPU die and connected through thousands of parallel wires (through-silicon vias). An H100 has roughly 3.35 TB/s of HBM3e bandwidth, compared to ~50 GB/s for consumer DDR5. That 60× difference is the reason a data center GPU costs tens of thousands of dollars while the rest of the system is comparatively cheap.</p>
+
+    <h4>Tiled matrix multiplication and cache layout</h4>
+    <p>A GPU's shared memory — the on-chip SRAM acting as an explicitly managed L1 cache — is tiny: typically 48–192 KB per streaming multiprocessor. A model with billions of parameters will never fit there. What does fit is a tile of the weight matrix currently being multiplied. Tiled matrix multiplication restructures computation to load a tile of A and a tile of B into shared memory, perform all multiplications involving those tiles, and only then load the next tiles — the same principle as i-k-j loop reordering for cache efficiency, extended to the GPU's explicit memory hierarchy. cuBLAS and cuDNN implement these kernels with hand-tuned assembly.</p>
+
+    <h3>Software Optimizations</h3>
+
+    <h4>Flash Attention</h4>
+    <p>Flash Attention restructures the entire attention computation to keep intermediate activations in SRAM rather than writing them back to HBM between operations. A naive implementation of a transformer layer executes attention scores, softmax, dropout, and projection as four separate kernels — each requiring a round trip to HBM. Flash Attention performs all operations on a single tile of data while it is resident in SRAM: reading from HBM once, writing back once. For models processing sequences of tens of thousands of tokens, this is the difference between the computation being feasible and prohibitively expensive.</p>
+
+    <h4>Operator fusion</h4>
+    <p>Operator fusion combines multiple mathematical operations into a single GPU kernel. The GELU activation after a linear layer, the layer normalization before an attention block, the residual addition that follows — all can be fused when the compute graph is known statically, eliminating redundant memory traffic at the cost of more complex kernel code.</p>
+
+    <h4>Static compilation — XLA and torch.compile</h4>
+    <p>Static compilation of compute graphs allows the runtime to reason about the entire computation before executing any of it. This enables constant folding (precomputing results known at compile time), dead code elimination (removing unused operations), and layout optimization (choosing tensor storage orders globally to minimize transposes). XLA, the compiler used by JAX and TensorFlow, generates fused kernels targeting specific hardware backends — often competitive with hand-tuned cuBLAS kernels while being far easier to deploy across different hardware targets.</p>
+
+    <h4>Batching and the throughput-latency tradeoff</h4>
+    <p>A model serving a single request pays the full memory bandwidth cost of loading weights for each request independently. Batching multiple requests together amortizes those weight reads: weights are loaded once and the same matrix multiplication serves multiple inputs simultaneously. This is the fundamental production inference tradeoff — larger batches improve throughput at the expense of latency. Systems like vLLM implement continuous batching, dynamically adding requests to in-progress batches to recover throughput while keeping tail latency manageable.</p>
+
+    <h4>Speculative decoding</h4>
+    <p>A small fast draft model proposes multiple tokens at once, which the large model then verifies in a single parallel forward pass. Verification is computationally cheaper than generation, reducing wall-clock inference latency by 3–5× with no change in output quality. It is effectively a prefetching strategy applied at the token level — the same principle that cache prefetching applies at the memory level, one abstraction layer higher.</p>
+
+    <h4>Distributed parallelism strategies</h4>
+    <p>A 70B parameter model requires ~140GB in float16 — far exceeding a single A100's 80GB. Three strategies compose to handle this:</p>
+    <ul>
+      <li><strong>Data parallelism</strong> — replicate the model across devices, split the batch. Synchronize gradients after each backward pass via all-reduce, overlapped with the backward pass on subsequent layers</li>
+      <li><strong>Tensor parallelism</strong> — split individual weight matrices across devices. Requires all-reduce communication inside each layer</li>
+      <li><strong>Pipeline parallelism</strong> — assign different layers to different devices, pass activations forward and gradients backward. Requires careful scheduling to avoid idle "bubble" time</li>
+    </ul>
+    <p>For very large models, these strategies are composed in three dimensions: Megatron-LM and DeepSpeed combine all three, mapping computation onto cluster interconnect topology — fast NVLink within a node, slower InfiniBand across nodes.</p>
+
+    <!-- ── PART 3: COST OF SCALE ──────────────────────── -->
+    <h2 id="cost">Part 3 — The Real Cost of Compute at Scale</h2>
+
+    <h3>What Training a Large Model Actually Costs</h3>
+
+    <p>GPT-3 has 175 billion parameters and was trained on roughly 300 billion tokens. The total compute required is approximately 3.14 × 10²³ floating-point operations — about 314 zettaFLOPs. Training ran on roughly 10,000 NVIDIA V100 GPUs for several weeks. A V100 delivers approximately 125 teraFLOPS in mixed precision. Accounting for hardware utilization (rarely above 30–50% due to communication overhead, memory bandwidth limits, and scheduling inefficiency), a realistic estimate puts actual wall-clock training time at around 34 days on that cluster. The electricity cost alone runs into the millions of dollars.</p>
+
+    <p>The scaling laws research from Hoffman et al. (the Chinchilla paper) established that compute-optimal training requires scaling training tokens proportionally with model parameters — roughly 20 tokens per parameter for a given compute budget. This means that doubling model size without doubling training data produces a suboptimal model. Correctly calibrated, the compute requirement scales roughly with the product of parameters and training tokens — meaning achieving a given quality level requires quadratically increasing investment as the performance frontier advances.</p>
+
+    <h3>Memory Bandwidth as the Inference Bottleneck</h3>
+
+    <p>At inference time, the structure shifts. A forward pass through a 70B parameter model in float16 requires reading roughly 140GB of weights from memory for each token generated. Generating a 1,000-token response therefore requires reading 140 terabytes of data from DRAM — for one user request. On an A100 with 2 TB/s of HBM bandwidth, that implies a floor of 70 seconds simply for memory access, ignoring compute entirely, when serving a single request.</p>
+
+    <div class="callout">
+      <p>This is why inference is almost universally <strong>memory-bandwidth-bound</strong> rather than compute-bound for autoregressive generation. The key ratio is arithmetic intensity — FLOP/byte. For matrix-vector multiplication (token-by-token generation), arithmetic intensity equals approximately the batch size. Serving a single request has arithmetic intensity of 1, far below the hardware's compute-to-bandwidth ratio (~300 FLOP/byte on an A100). Only when batch sizes reach into the hundreds does the computation become compute-bound and the hardware fully utilized.</p>
+    </div>
+
+    <h3>Cloud Economics at Scale</h3>
+
+    <p>An EC2 p4d.24xlarge instance — 8 A100 GPUs, 96 vCPUs, 1.1TB of memory — costs roughly $32/hour on-demand. Training a frontier model for 30 days on a cluster of 1,000 such instances costs approximately $23 million in raw compute alone, before reserved instance discounts, egress fees, storage costs, and the labor of engineering and debugging the training run.</p>
+
+    <p>At inference scale, economics shift toward utilization efficiency. A single A100 instance serving a 70B parameter model handles perhaps 5–20 requests per second depending on sequence length and batch size. A system serving millions of users requires thousands of such instances, with load balancing, autoscaling, and capacity planning that mirrors multiprocessor scheduling — matching available compute to fluctuating demand without stranding expensive GPU capacity or degrading user-facing latency.</p>
+
+    <h3>The Efficiency Frontier</h3>
+
+    <p>The practical work in ML systems is not maximizing a single metric but navigating a multi-dimensional tradeoff between accuracy, latency, cost, energy consumption, and deployability. A model achieving 95% benchmark accuracy but requiring $10M of compute per inference cluster is not competitive with one achieving 90% at $1M for most applications. Quantization, distillation, pruning, and speculative decoding are all points on this surface — techniques that trade a small amount of model quality for large reductions in compute or memory requirements.</p>
+
+    <p>The trajectory is clear: as models grow larger and the gap between compute capacity and memory bandwidth widens, the systems-level work of efficiently mapping computations onto hardware becomes as important as the algorithmic work of designing the models themselves.</p>
+
+    <!-- ── HEAD-TO-HEAD ────────────────────────────────── -->
+    <h2 id="comparison">Head-to-Head Comparison</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>GPU (H100)</th>
+          <th>TPU v4</th>
+          <th>LPU (Groq)</th>
+          <th>Cerebras WSE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Designed for</td><td>General parallel compute</td><td>NN training at scale</td><td>Transformer inference</td><td>Large model training</td></tr>
+        <tr><td>Core abstraction</td><td>SIMD + Tensor Cores</td><td>Systolic array</td><td>Deterministic streaming</td><td>Wafer-scale SRAM</td></tr>
+        <tr><td>Memory</td><td>HBM, 80GB, 3.35 TB/s</td><td>HBM + 3D torus interconnect</td><td>On-chip SRAM, 900MB</td><td>40GB on-chip SRAM</td></tr>
+        <tr><td>Training</td><td>Dominant</td><td>Strong (Google-scale)</td><td>Not suited</td><td>Strong</td></tr>
+        <tr><td>Inference</td><td>Capable</td><td>Capable</td><td>Best in class</td><td>Capable</td></tr>
+        <tr><td>Flexibility</td><td>High</td><td>Medium</td><td>Low</td><td>Low</td></tr>
+        <tr><td>Ecosystem</td><td>Dominant (CUDA)</td><td>Google-only (JAX/XLA)</td><td>Early stage</td><td>Early stage</td></tr>
+        <tr><td>Power efficiency</td><td>Moderate</td><td>High</td><td>High (inference)</td><td>High</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</article>
+
+</body>
+</html>

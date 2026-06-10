@@ -1,0 +1,71 @@
+/* css/graph.css */
+
+#graph {
+  background: var(--navy);
+}
+
+/* Legend */
+.graph-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.graph-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.graph-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Shape indicators in legend */
+.graph-legend-shape {
+  width: 10px; height: 10px;
+  border: 1.5px solid;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.graph-legend-shape.circle  { border-radius: 50%; }
+.graph-legend-shape.diamond { transform: rotate(45deg); border-radius: 2px; }
+.graph-legend-shape.squircle{ border-radius: 3px; }
+
+.graph-legend-sep { flex: 1; }
+
+.graph-legend-hint {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  opacity: 0.35;
+  margin-left: auto;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Graph canvas */
+.graph-shell {
+  width: 100%;
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.graph-shell svg { display: block; width: 100%; }
+
+/* Node hover state */
+.graph-node { transition: opacity 0.15s; }
+
+@media (max-width: 600px) {
+  .graph-legend-hint { display: none; }
+  .graph-legend-sep  { display: none; }
+}
