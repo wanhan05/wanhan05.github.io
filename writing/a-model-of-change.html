@@ -21,9 +21,10 @@
     }
     .writing-nav a {
       font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);
-      text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s;
+      text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s, border-color 0.2s;
+      border: 1px solid var(--border); border-radius: 4px; padding: 0.35rem 0.85rem;
     }
-    .writing-nav a:hover { color: var(--blue-bright); }
+    .writing-nav a:hover { color: var(--blue-bright); border-color: var(--blue-bright); }
     .writing-nav-logo {
       font-family: var(--mono); font-size: 0.8rem;
       color: var(--blue-bright); letter-spacing: 0.1em;
