@@ -6,6 +6,13 @@
 
 const PROJECTS = [
   {
+    title: 'Storm Futures — U.S. Power Grid Vulnerability Analysis',
+    tags: ['Statistics', 'Python', 'D3.js', 'NOAA'],
+    summary: 'Statistical investigation of 1,534 major U.S. grid outages (2000–2016) using DOE OE-417 and NOAA Storm Events data → regression, chi-squared, MLE, and nonparametric tests revealing that outages became more frequent but shorter, driven by a structural shift toward intentional attacks.',
+    detail: 'Built ETL pipeline merging Purdue/DOE outage records with 1.3M NOAA storm events across state-month joins (96.9% match rate). Applied <b>OLS regression</b> on log-transformed duration (R² = 0.417, n = 1,001), <b>chi-squared</b> independence and homogeneity tests (χ² = 524.5 and 343.3, both p < 1e-60), <b>gamma MLE</b> distribution fitting (best AIC/BIC), storm-severity likelihood ratio test (χ²(4) = 34.57, p = 5.7e-07), and nonparametric <b>KS, runs, and ACF tests</b> confirming seasonal clustering and a post-2015 duration drop.',
+    link: 'assets/storm-futures-report.pdf',
+  },
+  {
     title: 'ChainSense — Blockchain Behavioral Analytics',
     tags: ['ML', 'Ethereum', 'Unsupervised'],
     summary: 'ETL pipeline on 3.9M Ethereum transactions → 50+ engineered behavioral features → K-Means and DBSCAN clustering into 5 distinct wallet archetypes with a 0.72 silhouette score.',
@@ -42,13 +49,6 @@ const PROJECTS = [
     tags: ['Policy', 'Environment', 'Computing'],
     summary: 'Supply chain accounting of AI\'s physical footprint — electricity, water, rare earth minerals, and chip fabrication — and the regulatory disclosure obligations that follow.',
     detail: 'GPT-3 training: ~1,287 MWh, equivalent to 120 US households annually. Google data centers: <b>5.6 billion gallons of water in 2022</b>. Covers <b>rare earth conflict minerals</b> (cobalt, tantalum, gallium), TSMC\'s fabrication water usage, and carbon policy implications of compute geography.',
-  },
-  {
-    title: 'Storm Futures — U.S. Power Grid Vulnerability Analysis',
-    tags: ['Statistics', 'Python', 'D3.js', 'NOAA'],
-    summary: 'Statistical investigation of 1,534 major U.S. grid outages (2000–2016) using DOE OE-417 and NOAA Storm Events data → regression, chi-squared, MLE, and nonparametric tests revealing that outages became more frequent but shorter, driven by a structural shift toward intentional attacks.',
-    detail: 'Built ETL pipeline merging Purdue/DOE outage records with 1.3M NOAA storm events across state-month joins (96.9% match rate). Applied <b>OLS regression</b> on log-transformed duration (R² = 0.417, n = 1,001), <b>chi-squared</b> independence and homogeneity tests (χ² = 524.5 and 343.3, both p < 1e-60), <b>gamma MLE</b> distribution fitting (best AIC/BIC), storm-severity likelihood ratio test (χ²(4) = 34.57, p = 5.7e-07), and nonparametric <b>KS, runs, and ACF tests</b> confirming seasonal clustering and a post-2015 duration drop.',
-    link: 'assets/storm-futures-report.pdf',
   },
 ];
 
