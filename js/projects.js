@@ -13,6 +13,14 @@ const PROJECTS = [
     link: 'assets/storm-futures-report.pdf',
   },
   {
+    title: 'Storm Futures — Atlantic Hurricane Risk Under Climate Scenarios',
+    tags: ['D3.js', 'Climate', 'CMIP6', 'NOAA'],
+    summary: 'CMIP6 greenhouse gas projections + NOAA GOES satellite SST data → interactive D3.js scrollytelling visualization showing how Atlantic hurricane heat potential diverges dramatically across SSP1-2.6, SSP2-4.5, and SSP5-8.5 emissions futures through 2100.',
+    detail: 'Built with <b>GFDL-ESM4</b> model data and real GOES satellite ocean temperature grids. Processed <b>3 greenhouse gases</b> (CO₂, CH₄, N₂O) across 5 SSP pathways from 1850–2100. Computed SST warming maps by subtracting 2015–2025 baselines from 2080–2100 projections and isolated <b>28°C hurricane intensification threshold zones</b> across Atlantic danger regions. Tropical storm force diameter has grown <b>42% since the 1970s</b> (105.7 → 150.0 nautical miles) and 2024 recorded the highest average wind speeds in the dataset.',
+    link: 'https://nkerudi.github.io/Final-Project-DSC106-/storm_futures/',
+    github: 'https://github.com/nkerudi/Final-Project-DSC106-Hero',
+  },
+  {
     title: 'ChainSense — Blockchain Behavioral Analytics',
     tags: ['ML', 'Ethereum', 'Unsupervised'],
     summary: 'ETL pipeline on 3.9M Ethereum transactions → 50+ engineered behavioral features → K-Means and DBSCAN clustering into 5 distinct wallet archetypes with a 0.72 silhouette score.',
@@ -67,6 +75,7 @@ function renderProjectCard(p) {
       <div class="proj-detail">
         <p class="proj-detail-body">${p.detail}</p>
         ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-bright);">${p.link.endsWith('.pdf') ? 'View report →' : 'View project →'}</a>` : ''}
+        ${p.github ? `<a href="${p.github}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;margin-left:1rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-bright);">GitHub →</a>` : ''}
       </div>
     </div>`;
 }
