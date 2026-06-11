@@ -25,7 +25,8 @@ const PROJECTS = [
     tags: ['ML', 'Ethereum', 'Unsupervised'],
     summary: 'ETL pipeline on 3.9M Ethereum transactions → 50+ engineered behavioral features → K-Means and DBSCAN clustering into 5 distinct wallet archetypes with a 0.72 silhouette score.',
     detail: 'Built using <b>Web3.py, Alchemy API, DuckDB, and Parquet</b> with a bronze-silver-gold data architecture. Applied <b>TF-IDF encoding on event sequences</b>, <b>PCA and UMAP</b> for dimensionality reduction. Proposed GPU-accelerated rewrite using RAPIDS/cuML — DBSCAN 50–500× speedup, UMAP 50–100× speedup.',
-   link: 'writing/chainsense-technical-report.html',
+    link: 'writing/chainsense-technical-report.html',
+    github: 'https://github.com/KaiiB/chainsense',
   },
   {
     title: 'SFIC — Options Pricing & Volatility Analytics',
