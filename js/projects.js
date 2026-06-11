@@ -43,14 +43,13 @@ const PROJECTS = [
     summary: 'Supply chain accounting of AI\'s physical footprint — electricity, water, rare earth minerals, and chip fabrication — and the regulatory disclosure obligations that follow.',
     detail: 'GPT-3 training: ~1,287 MWh, equivalent to 120 US households annually. Google data centers: <b>5.6 billion gallons of water in 2022</b>. Covers <b>rare earth conflict minerals</b> (cobalt, tantalum, gallium), TSMC\'s fabrication water usage, and carbon policy implications of compute geography.',
   },
-  // ── ADD NEW PROJECTS BELOW ──────────────────────────
-  // {
-  //   title: 'Your New Project',
-  //   tags: ['Tag1', 'Tag2'],
-  //   summary: 'One paragraph visible in the slider card.',
-  //   detail: 'Expanded detail shown when the card is clicked.',
-  //   link: null, // optional external link
-  // },
+  {
+    title: 'Storm Futures — U.S. Power Grid Vulnerability Analysis',
+    tags: ['Statistics', 'Python', 'D3.js', 'NOAA'],
+    summary: 'Statistical investigation of 1,534 major U.S. grid outages (2000–2016) using DOE OE-417 and NOAA Storm Events data → regression, chi-squared, MLE, and nonparametric tests revealing that outages became more frequent but shorter, driven by a structural shift toward intentional attacks.',
+    detail: 'Built ETL pipeline merging Purdue/DOE outage records with 1.3M NOAA storm events across state-month joins (96.9% match rate). Applied <b>OLS regression</b> on log-transformed duration (R² = 0.417, n = 1,001), <b>chi-squared</b> independence and homogeneity tests (χ² = 524.5 and 343.3, both p < 1e-60), <b>gamma MLE</b> distribution fitting (best AIC/BIC), storm-severity likelihood ratio test (χ²(4) = 34.57, p = 5.7e-07), and nonparametric <b>KS, runs, and ACF tests</b> confirming seasonal clustering and a post-2015 duration drop.',
+    link: 'assets/storm-futures-report.pdf',
+  },
 ];
 
 function renderProjectCard(p) {
@@ -67,7 +66,7 @@ function renderProjectCard(p) {
       </button>
       <div class="proj-detail">
         <p class="proj-detail-body">${p.detail}</p>
-        ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-bright);">View project →</a>` : ''}
+        ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-bright);">${p.link.endsWith('.pdf') ? 'View report →' : 'View project →'}</a>` : ''}
       </div>
     </div>`;
 }
